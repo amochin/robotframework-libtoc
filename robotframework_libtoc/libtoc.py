@@ -251,7 +251,9 @@ def create_docs_for_dir(resource_dir, output_dir, config_file):
     for lib in libs:
         target_path = os.path.join(target_dir, lib.partition("::")[0] + ".html")
         print(f">> Generating docs for library: {lib}")  
-        robot.libdoc.libdoc(lib, target_path)
+        return_code = robot.libdoc.libdoc(lib, target_path)
+        if return_code > 0:
+            raise Exception(f"Libdoc error! Return code: {return_code}")
         print("")
 
 def create_toc(html_docs_dir, toc_file="keyword_docs.html", homepage_file="homepage.html"):
