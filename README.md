@@ -19,7 +19,8 @@ in the intranet or uploaded as CI artifact - so everybody can easily access the 
 - The tool goes through the specified folder with RF resources and it's **direct** subfolders
 - It looks for the **config files** named `.libtoc` which contain:
     1. Paths to resource files in [glob format](https://en.wikipedia.org/wiki/Glob_(programming)) which you would like to create docs for
-    2. Installed RF libraries (names and necessary params like described in [libdoc user guide](https://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#general-usage))
+    2. Installed RF libraries (names and necessary import params like described in [libdoc user guide](https://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#general-usage))
+        > Other libdoc CLI options (e.g. version or name of the output file) are not supported
 - Then it gererates the docs using `libdoc` - both for files paths, resolved from the glob patterns, and for the installed libraries. The created HTML files are places in the **libtoc output_dir** - keeping the original subfolder structure of resources
 - Finally it generates a **TOC (Table of Contents)** HTML page with links to all the generated HTML files.
  The navigation tree structure in the TOC repeats the folder tree structure.
