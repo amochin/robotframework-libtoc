@@ -202,11 +202,11 @@ def main():
         shutil.rmtree(args.output_dir)
 
     for child_element in os.listdir(args.resources_dir):                
-        if os.path.isdir(child_element):
-            subfolder = os.path.join(args.resources_dir, child_element)
-            config_file = os.path.join(subfolder, args.config_file)
+        child_element_path = os.path.join(args.resources_dir, child_element)
+        if os.path.isdir(child_element_path):
+            config_file = os.path.join(child_element_path, args.config_file)
             if os.path.isfile(config_file):
-                create_docs_for_dir(subfolder, args.output_dir, os.path.abspath(config_file))
+                create_docs_for_dir(child_element_path, args.output_dir, os.path.abspath(config_file))
         elif child_element == args.config_file:
             create_docs_for_dir(args.resources_dir, args.output_dir, os.path.abspath(os.path.join(args.resources_dir, args.config_file)))            
     
