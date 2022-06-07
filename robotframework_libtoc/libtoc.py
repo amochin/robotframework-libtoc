@@ -1,3 +1,4 @@
+from encodings import utf_8
 import os
 import sys
 import shutil
@@ -6,108 +7,15 @@ import argparse
 from datetime import datetime
 import robot.libdoc
 
-def toc(links, timestamp, home_page_path):
+def toc(links, timestamp, home_page_path, template_file=""):
     """
     Returns a HTML source code for TOC (Table of Content) page, based on the template and including
     the provided `links`, generation `timestamp` and the `home_page_path` HTML file as a landing page.
     """
-    html_template = """
-    <html>
-    <head>
-    <style>
-    body { font-family: "Lato", sans-serif;}
-    .collapsible { background: none; color: #818181; cursor: pointer; padding: 6px 6px 6px 32px; width: 100%; text-align:
-    left; font-size: 16px; border: none;}
-    .collapsible:hover { color: white;}
-    .collapsible_expanded { color: #818181; }
-    .collapsible_content { padding-left: 15px; display: none; overflow: hidden;}
-    .sidenav { height: 100%; width: 20%; position: fixed; z-index: 1; top: 0; left: 0; text-align: left;
-     background-color: #111; overflow: auto; resize: none;  font-size: 16px;}
-    .sidenav a:hover { color: #f1f1f1;}
-    .link_not_selected { padding: 6px 6px 6px 32px; text-decoration: none; color: #818181; display: block;}
-    .link_selected {padding: 6px 6px 6px 32px; text-decoration: none; color: white; display: block;}    
-    .sidenav p { padding: 0px 0px 0px 12px; color: #818181; position: relative; bottom: 0}
-    .sidenav_open_button {background: none; cursor: pointer; border:none; font-size: 24px;}
-    .sidenav_close_button {background: none; color: white; cursor: pointer; width: 100%; text-align:
-    left; border:none; font-size: 30px; padding-top: 5px; padding-left: 15px}
-    .main { margin-left: 20%;, height: 100%}
-    </style>
-    </head>
-    <body>
-    
-    <div id="main" class="main">
-    <div>
-    <button id="openNav" class="sidenav_open_button" onclick="sidenav_open()" style="display:none">&#9776;</button>
-    </div>
-    <iframe name="targetFrame" src="{}" allowTransparency="true" frameborder="0" width="100%" height="98%">
-    </iframe>
-    </div>
-    
-    <div id="sidenav" class="sidenav">
-    <button class="sidenav_close_button" onclick="sidenav_close()">&times;</button>
-    <a class="link_not_selected" href="http://robotframework.org/robotframework/" target="targetFrame">Robot Framework Documentation
-    </a>
-    <a class="link_not_selected" href="http://robotframework.org/SeleniumLibrary/SeleniumLibrary.html" target="targetFrame">SeleniumLibrary</a>
-    <hr>
-    {}
-    <hr>
-    <p>
-    Created: {}
-    </p>
-    </div>
-    <script>
-        var coll = document.getElementsByClassName("collapsible");
-        var i;
-        for (i = 0; i < coll.length; i++)
-        {
-            coll[i].addEventListener("click", function()
-            {
-                this.classList.toggle("collapsible_expanded");
-                var content = this.nextElementSibling;
-                if (content.style.display === "block")
-                {
-                    content.style.display = "none";
-                }
-                else
-                {
-                    content.style.display = "block";
-                }
-            });
-        }
-        
-        var leaf_links = document.getElementsByClassName("link_not_selected");
-        var i;
-        for (i = 0; i < leaf_links.length; i++)
-        {
-            leaf_links[i].addEventListener("click", function()
-            {                
-                var active_leaf_links = document.getElementsByClassName("link_selected");
-                var j;
-                for (j=0; j < active_leaf_links.length; j++)
-                {
-                    active_leaf_links[j].className = "link_not_selected";
-                }                
-                this.className = "link_selected";                             
-            });
-        }
-        
-        function sidenav_open()
-        {
-            document.getElementById("main").style.marginLeft = "20%";
-            document.getElementById("sidenav").style.width = "20%";
-            document.getElementById("sidenav").style.display = "block";
-            document.getElementById("openNav").style.display = 'none';
-        }
-        function sidenav_close()
-        {
-            document.getElementById("main").style.marginLeft = "0%";
-            document.getElementById("sidenav").style.display = "none";
-            document.getElementById("openNav").style.display = "inline";
-        }
-    </script>
-    </body>
-    </html>
-    """
+    if template_file == "":
+        template_file = os.path.join(os.path.dirname(__file__), "toc_template.html")
+    with open(template_file, encoding="utf8") as f:
+        html_template = f.read()
 
     # double all brackets to make the further formatting work
     html_with_escaped_braces = html_template.replace('{', '{{')
@@ -118,29 +26,14 @@ def toc(links, timestamp, home_page_path):
 
     return html_with_escaped_braces.format(home_page_path, links, timestamp)
 
-def homepage(timestamp):
+def homepage(timestamp, template_file=""):
     """
     Returns a HTML source code for a landing page, based on the template and includig the provided `timestamp`.
     """
-    html_template = """
-    <html>
-    <meta charset="utf-8">
-    <body style="font-family: 'Lato', sans-serif;">
-    <h1>
-    Docs for Robot Framework keywords.
-    </h1>
-    <p>
-    Please select a library in the navigation sidebar
-    </p>
-    <p>
-    Created: 
-    <b>
-    {0}
-    </b>
-    </p>
-    </body>
-    </html>
-    """
+    if template_file == "":
+        template_file = os.path.join(os.path.dirname(__file__), "homepage_template.html")
+    with open(template_file, encoding="utf_8") as f:
+        html_template = f.read()
     return html_template.format(timestamp)
 
 def read_config(config_file):
@@ -256,7 +149,7 @@ def create_docs_for_dir(resource_dir, output_dir, config_file):
             raise Exception(f"Libdoc error! Return code: {return_code}")
         print("")
 
-def create_toc(html_docs_dir, toc_file="keyword_docs.html", homepage_file="homepage.html"):
+def create_toc(html_docs_dir, toc_file="keyword_docs.html", homepage_file="homepage.html", toc_template="", homepage_template=""):
     """
     Generates a `toc_file` (Table of Contents) HTML page with links to all HTML files inside the `html_docs_dir` and all it's subfolders.
 
@@ -282,12 +175,12 @@ def create_toc(html_docs_dir, toc_file="keyword_docs.html", homepage_file="homep
     current_date_time = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
     doc_files_links = add_files_from_folder(src_subdir, os.path.abspath(html_docs_dir))
     with open(homepage_path, 'w', encoding="utf8") as f:
-        f.write(homepage(current_date_time))
+        f.write(homepage(current_date_time, homepage_template))
 
     # create TOC
     toc_file_path = os.path.join(html_docs_dir, toc_file)
     with open(toc_file_path, 'w', encoding="utf8") as f:
-        f.write(toc(doc_files_links, current_date_time, os.path.relpath(homepage_path, os.path.abspath(html_docs_dir))))
+        f.write(toc(doc_files_links, current_date_time, os.path.relpath(homepage_path, os.path.abspath(html_docs_dir)), toc_template))
     
     print("Finished. Output file: {}".format(os.path.abspath(toc_file_path)))
 
@@ -295,8 +188,10 @@ def main():
     parser = argparse.ArgumentParser(description="Generates keyword docs using libdoc based on config files in direct subfolders of the resources dir and creates a TOC")
     parser.add_argument("resources_dir", help="Folder with resources and keywords files")
     parser.add_argument("-d", "--output_dir", default="docs", help="Folder to create the docs in")
-    parser.add_argument("-c", "--config_file", default=".libtoc", help="File in each folder with docs generation configs")
-    parser.add_argument("-t", "--toc_file", default="keyword_docs.html", help="Name of the TOC file generated")
+    parser.add_argument("--config_file", default=".libtoc", help="File in each folder with docs generation configs")
+    parser.add_argument("--toc_file", default="keyword_docs.html", help="Name of the TOC file generated")
+    parser.add_argument("--toc_template", default="", help = "Custom HTML template for the TOC file")
+    parser.add_argument("--homepage_template", default="", help = "Custom HTML template for the homepage file")  
 
     args = parser.parse_args()
 
@@ -316,7 +211,7 @@ def main():
             create_docs_for_dir(args.resources_dir, args.output_dir, os.path.abspath(os.path.join(args.resources_dir, args.config_file)))            
     
     if os.path.isdir(args.output_dir):
-        create_toc(args.output_dir, args.toc_file)
+        create_toc(args.output_dir, args.toc_file, toc_template=args.toc_template, homepage_template=args.homepage_template)
     else:
         print("No docs were created!")
 

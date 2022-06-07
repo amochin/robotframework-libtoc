@@ -6,6 +6,7 @@ authors = ["Andre Mochinin"]
 license = "Apache-2.0"
 readme = "README.md"
 homepage = "https://github.com/amochin/robotframework-libtoc"
+include = ["robotframework_libtoc/*template.html"]
 
 [tool.poetry.dependencies]
 python = ">=3.8"

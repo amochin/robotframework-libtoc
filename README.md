@@ -1,4 +1,4 @@
-## Robot Frmework LibTOC
+## Robot Framework LibTOC
 
 ## What it does
 This tool generates docs using Robot Framework [Libdoc](https://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#libdoc) for an entire folder with Robot Framework resources/libs and creates a TOC (Table of Content) file for them
@@ -51,17 +51,21 @@ pip install robotframework-libtoc
     > A config file directly in the root of the resources folder is valid, but not mandatory.
 - Run `libtoc`. The last `resources_dir` parameter is mandatory, others are optional:
     - `-d, --output_dir`
-    - `-c, --config_file`
-    - `-t, --toc_file`
+    - `--config_file`
+    - `--toc_file`
+    - `--toc_template`
+    - `--homepage_template`
 
     Examples:
     ```shell
     libtoc example_resources
     libtoc --output_dir docs example_resources
-    libtoc --output_dir docs --toc_file my_special_docs.html example_resources
+    libtoc --output_dir docs --toc_file MY_SPECIAL_NAME_FOR_DOCS.html example_resources
+    libtoc --toc_template MY_CUSTOM_TOC.html --homepage_template MY_CUSTOM_HOMEPAGE.html example_resources
     ```
 
 - Open the created file, e.g. `docs\keyword_docs.html`
 
-## How to change the TOC and the homepage HTML
-The HTML templates are located directly in the python source code - see functions `toc` and `homepage`.
+## How to change the TOC and the homepage HTML templates
+The default HTML template files are located in the python installation directory (usually something like `<python_dir>\lib\site-packages\robotframework_libtoc`) and can be changed if necessary.   
+It's also possible to provide custom HTML template files using the `--toc_template` and `--homepage_template` options.

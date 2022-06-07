@@ -1,0 +1,94 @@
+<html>
+    <head>
+    <style>
+    body { font-family: "Lato", sans-serif;}
+    .collapsible { background: none; color: #818181; cursor: pointer; padding: 6px 6px 6px 32px; width: 100%; text-align:
+    left; font-size: 16px; border: none;}
+    .collapsible:hover { color: white;}
+    .collapsible_expanded { color: #818181; }
+    .collapsible_content { padding-left: 15px; display: none; overflow: hidden;}
+    .sidenav { height: 100%; width: 20%; position: fixed; z-index: 1; top: 0; left: 0; text-align: left;
+     background-color: #111; overflow: auto; resize: none;  font-size: 16px;}
+    .sidenav a:hover { color: #f1f1f1;}
+    .link_not_selected { padding: 6px 6px 6px 32px; text-decoration: none; color: #818181; display: block;}
+    .link_selected {padding: 6px 6px 6px 32px; text-decoration: none; color: white; display: block;}    
+    .sidenav p { padding: 0px 0px 0px 12px; color: #818181; position: relative; bottom: 0}
+    .sidenav_open_button {background: none; cursor: pointer; border:none; font-size: 24px;}
+    .sidenav_close_button {background: none; color: white; cursor: pointer; width: 100%; text-align:
+    left; border:none; font-size: 30px; padding-top: 5px; padding-left: 15px}
+    .main { margin-left: 20%;, height: 100%}
+    </style>
+    </head>
+    <body>
+    
+    <div id="main" class="main">
+    <div>
+    <button id="openNav" class="sidenav_open_button" onclick="sidenav_open()" style="display:none">&#9776;</button>
+    </div>
+    <iframe name="targetFrame" src="{}" allowTransparency="true" frameborder="0" width="100%" height="98%">
+    </iframe>
+    </div>
+    
+    <div id="sidenav" class="sidenav">
+    <button class="sidenav_close_button" onclick="sidenav_close()">&times;</button>
+    <a class="link_not_selected" href="http://robotframework.org/robotframework/" target="targetFrame">Robot Framework Documentation
+    </a>
+    <hr>
+    {}
+    <hr>
+    <p>
+    Created: {}
+    </p>
+    </div>
+    <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+        for (i = 0; i < coll.length; i++)
+        {
+            coll[i].addEventListener("click", function()
+            {
+                this.classList.toggle("collapsible_expanded");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block")
+                {
+                    content.style.display = "none";
+                }
+                else
+                {
+                    content.style.display = "block";
+                }
+            });
+        }
+        
+        var leaf_links = document.getElementsByClassName("link_not_selected");
+        var i;
+        for (i = 0; i < leaf_links.length; i++)
+        {
+            leaf_links[i].addEventListener("click", function()
+            {                
+                var active_leaf_links = document.getElementsByClassName("link_selected");
+                var j;
+                for (j=0; j < active_leaf_links.length; j++)
+                {
+                    active_leaf_links[j].className = "link_not_selected";
+                }                
+                this.className = "link_selected";                             
+            });
+        }
+        
+        function sidenav_open()
+        {
+            document.getElementById("main").style.marginLeft = "20%";
+            document.getElementById("sidenav").style.width = "20%";
+            document.getElementById("sidenav").style.display = "block";
+            document.getElementById("openNav").style.display = 'none';
+        }
+        function sidenav_close()
+        {
+            document.getElementById("main").style.marginLeft = "0%";
+            document.getElementById("sidenav").style.display = "none";
+            document.getElementById("openNav").style.display = "inline";
+        }
+    </script>
+    </body>
+</html>

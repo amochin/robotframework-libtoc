@@ -1,5 +1,6 @@
-# Created docs
+# Created docs except templates
 **/*.html
+!**/*template.html
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
