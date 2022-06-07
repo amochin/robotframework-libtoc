@@ -292,7 +292,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generates keyword docs using libdoc based on config files in direct subfolders of the resources dir and creates a TOC")
     parser.add_argument("resources_dir", help="Folder with resources and keywords files")
     parser.add_argument("-d", "--output_dir", default="docs", help="Folder to create the docs in")
-    parser.add_argument("-c", "--config_file", default="doc.config", help="File in each folder with docs generation configs")
+    parser.add_argument("-c", "--config_file", default=".libtoc", help="File in each folder with docs generation configs")
+    parser.add_argument("-t", "--toc_file", default="keyword_docs.html", help="Name of the TOC file generated")
+
     args = parser.parse_args()
 
     print(f"Creating docs for: {args.resources_dir}")
@@ -311,6 +313,6 @@ if __name__ == "__main__":
             create_docs_for_dir(args.resources_dir, args.output_dir, os.path.abspath(os.path.join(args.resources_dir, args.config_file)))            
     
     if os.path.isdir(args.output_dir):
-        create_toc(args.output_dir)
+        create_toc(args.output_dir, args.toc_file)
     else:
         print("No docs were created!")
