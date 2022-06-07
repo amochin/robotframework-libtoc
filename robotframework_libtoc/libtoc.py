@@ -1,4 +1,5 @@
 import os
+import sys
 import shutil
 import glob
 import argparse
@@ -288,7 +289,7 @@ def create_toc(html_docs_dir, toc_file="keyword_docs.html", homepage_file="homep
     
     print("Finished. Output file: {}".format(os.path.abspath(toc_file_path)))
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(description="Generates keyword docs using libdoc based on config files in direct subfolders of the resources dir and creates a TOC")
     parser.add_argument("resources_dir", help="Folder with resources and keywords files")
     parser.add_argument("-d", "--output_dir", default="docs", help="Folder to create the docs in")
@@ -316,3 +317,6 @@ if __name__ == "__main__":
         create_toc(args.output_dir, args.toc_file)
     else:
         print("No docs were created!")
+
+if __name__ == "__main__":
+    main()

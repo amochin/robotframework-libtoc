@@ -1,0 +1,18 @@
+[[package]]
+name = "robotframework"
+version = "5.0.1"
+description = "Generic automation framework for acceptance testing and robotic process automation (RPA)"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[metadata]
+lock-version = "1.1"
+python-versions = ">=3.8"
+content-hash = "b96cb1a46d3b32ed04185f80460cdc99358bd6c47c9183187be934a0b03fd1f4"
+
+[metadata.files]
+robotframework = [
+    {file = "robotframework-5.0.1-py3-none-any.whl", hash = "sha256:2d2072cf9ec807e820bf27e5f71240e715e37691c9ba930a59a71d5c0fd61998"},
+    {file = "robotframework-5.0.1.zip", hash = "sha256:cf5dc59777ed9d8c3e1e91fb4403454890242867735681f22f4f22dbb2a20fc8"},
+]
