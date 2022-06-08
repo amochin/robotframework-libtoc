@@ -42,7 +42,7 @@ SomeLib::$some_env_var/somepath
 > The config file must contain at least one of the sections (`[paths]`, `[libs]` or both)
 ## How to install it
 ### System requirements
-- Python >=3.9
+- Python >=3.7
 - Robot Framework
 ### Installation using pip
 ```shell
