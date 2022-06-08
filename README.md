@@ -1,13 +1,13 @@
 ## Robot Framework LibTOC
 
 ## What it does
-This tool generates docs using Robot Framework [Libdoc](https://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#libdoc) for an entire folder with Robot Framework resources/libs and creates a TOC (Table of Content) file for them
+This tool generates docs using Robot Framework [Libdoc](https://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#libdoc) for an entire folder with Robot Framework resources/libs and creates a TOC (table of contents) file for them
 
 ## Why use it
 The Robot Framework Libdoc tool normally generates a HTML file for a single keyword library or a resource file.
 If you have several keyword libraries, you just get several separate HTML files.
 
-This tool collects separate keyword documentation files in one place and creates a TOC (Table of content) page
+This tool collects separate keyword documentation files in one place and creates a TOC (table of contents) page
 with links to these files.   
 The result is a folder with several static HTML pages which can be placed somewhere 
 in the intranet or uploaded as CI artifact - so everybody can easily access the keywords docs.

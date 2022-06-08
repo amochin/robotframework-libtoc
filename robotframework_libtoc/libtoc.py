@@ -9,7 +9,7 @@ import robot.libdoc
 
 def toc(links, timestamp, home_page_path, template_file=""):
     """
-    Returns a HTML source code for TOC (Table of Content) page, based on the template and including
+    Returns a HTML source code for TOC (table of contents) page, based on the template and including
     the provided `links`, generation `timestamp` and the `home_page_path` HTML file as a landing page.
     """
     if template_file == "":
