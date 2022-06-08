@@ -197,7 +197,7 @@ def main():
 
     args = parser.parse_args()
 
-    print(f"Creating docs for: {args.resources_dir}")
+    print(f"Creating docs for: {os.path.abspath(args.resources_dir)}")
 
     if os.path.isdir(args.output_dir):
         print(f"Output dir already exists, deleting it: {args.output_dir}")
