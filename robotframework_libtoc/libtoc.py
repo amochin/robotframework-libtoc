@@ -137,7 +137,9 @@ def create_docs_for_dir(resource_dir, output_dir, config_file):
             relative_path = os.path.relpath(real_path, resource_dir)
             target_path = os.path.join(target_dir, relative_path.rpartition('.')[0] + ".html")
             print(f">> Generating docs for resource: {relative_path}")
-            robot.libdoc.libdoc(real_path, target_path)
+            return_code = robot.libdoc.libdoc(real_path, target_path)
+            if return_code > 0:
+                raise Exception(f"Libdoc error! Return code: {return_code}")
             print("")
 
     libs = doc_config["libs"]
