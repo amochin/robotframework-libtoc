@@ -36,6 +36,8 @@ in the intranet or uploaded as CI artifact - so everybody can easily access the 
 # Use RF library names with params - like for libdoc
 SeleniumLibrary
 Remote::http://10.0.0.42:8270
+# You can use environment variables in lib params
+SomeLib::$some_env_var/somepath
 ```
 > The config file must contain at least one of the sections (`[paths]`, `[libs]` or both)
 ## How to install it

@@ -144,9 +144,10 @@ def create_docs_for_dir(resource_dir, output_dir, config_file):
 
     libs = doc_config["libs"]
     for lib in libs:
-        target_path = os.path.join(target_dir, lib.partition("::")[0] + ".html")
-        print(f">> Generating docs for library: {lib}")  
-        return_code = robot.libdoc.libdoc(lib, target_path)
+        lib_str_with_resolved_vars = os.path.expandvars(lib)
+        target_path = os.path.join(target_dir, lib_str_with_resolved_vars.partition("::")[0] + ".html")
+        print(f">> Generating docs for library: {lib_str_with_resolved_vars}")  
+        return_code = robot.libdoc.libdoc(lib_str_with_resolved_vars, target_path)
         if return_code > 0:
             raise Exception(f"Libdoc error! Return code: {return_code}")
         print("")
