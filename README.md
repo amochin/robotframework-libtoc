@@ -37,6 +37,7 @@ in the intranet or uploaded as CI artifact - so everybody can easily access the 
 SeleniumLibrary
 Remote::http://10.0.0.42:8270
 ```
+> The config file must contain at least one of the sections (`[paths]`, `[libs]` or both)
 ## How to install it
 ### System requirements
 - Python >=3.9
