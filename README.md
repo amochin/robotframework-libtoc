@@ -39,7 +39,7 @@ Remote::http://10.0.0.42:8270
 # You can use environment variables in lib params
 SomeLib::$some_env_var/somepath
 ```
-> The config file must contain at least one of the sections (`[paths]`, `[libs]` or both)
+> The config file must contain at least one of the sections - `[paths]`, `[libs]` or both
 ## How to install it
 ### System requirements
 - Python >=3.7
