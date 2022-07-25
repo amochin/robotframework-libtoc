@@ -50,8 +50,7 @@ pip install robotframework-libtoc
 ```
 
 ## How to use it
-- Create the `.libtoc` config files in subfolders where you need docs to be created.
-    > A config file directly in the root of the resources folder is valid, but not mandatory.
+- Create the `.libtoc` config files in the root of the resources folder or in direct subfolders where you need docs to be created.    
 - Run `libtoc`. The last `resources_dir` parameter is mandatory, others are optional:
     - `-d, --output_dir`
     - `--config_file`
