@@ -1,6 +1,4 @@
-from encodings import utf_8
 import os
-import sys
 import shutil
 import glob
 import argparse
