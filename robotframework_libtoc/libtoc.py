@@ -134,6 +134,7 @@ def create_docs_for_dir(resource_dir, output_dir, config_file):
     doc_config = read_config(config_file)
     
     resource_path_patterns = doc_config["paths"]
+    broken_files = []
     for path_pattern in resource_path_patterns:
         for real_path in glob.glob(os.path.join(resource_dir, path_pattern), recursive=True):
             relative_path = os.path.relpath(real_path, resource_dir)
@@ -141,18 +142,18 @@ def create_docs_for_dir(resource_dir, output_dir, config_file):
             print(f">> Generating docs for resource: {relative_path}")
             return_code = robot.libdoc.libdoc(real_path, target_path)
             if return_code > 0:
-                raise LibdocException(relative_path)
-            print("")
+                broken_files.append(relative_path)
 
     libs = doc_config["libs"]
+    broken_libs = []
     for lib in libs:
         lib_str_with_resolved_vars = os.path.expandvars(lib)
         target_path = os.path.join(target_dir, lib_str_with_resolved_vars.partition("::")[0] + ".html")
-        print(f">> Generating docs for library: {lib_str_with_resolved_vars}")  
+        print(f">> Generating docs for library: {lib_str_with_resolved_vars}") 
         return_code = robot.libdoc.libdoc(lib_str_with_resolved_vars, target_path)
         if return_code > 0:
-            raise LibdocException(relative_path)
-        print("")
+            broken_libs.append(lib_str_with_resolved_vars)
+    return broken_files, broken_libs
 
 def create_toc(html_docs_dir, toc_file="keyword_docs.html", homepage_file="homepage.html", toc_template="", homepage_template=""):
     """
@@ -202,36 +203,44 @@ def main():
 
     print(f"Creating docs for: {os.path.abspath(args.resources_dir)}")
 
-    broken_files = []
-
     if os.path.isdir(args.output_dir):
         print(f"Output dir already exists, deleting it: {args.output_dir}")
         shutil.rmtree(args.output_dir)
-
+    total_broken_files = []
+    total_broken_libs = []
     for child_element in os.listdir(args.resources_dir):                
         child_element_path = os.path.join(args.resources_dir, child_element)
-        try:
-            if os.path.isdir(child_element_path):
-                config_file = os.path.join(child_element_path, args.config_file)
-                if os.path.isfile(config_file):
-                    create_docs_for_dir(child_element_path, args.output_dir, os.path.abspath(config_file))
-            elif child_element == args.config_file:
-                create_docs_for_dir(args.resources_dir, args.output_dir, os.path.abspath(os.path.join(args.resources_dir, args.config_file)))            
-        except LibdocException as e:
-            print(f"---> !!! Error while generating docs for '{e.broken_file}'")
-            broken_files.append(e.broken_file)
-            print("")
+        current_broken_files = []
+        current_broken_libs = []
+        if os.path.isdir(child_element_path):
+            config_file = os.path.join(child_element_path, args.config_file)
+            if os.path.isfile(config_file):
+                current_broken_files, current_broken_libs = create_docs_for_dir(child_element_path, args.output_dir, os.path.abspath(config_file))
+        elif child_element == args.config_file:
+            current_broken_files, current_broken_libs = create_docs_for_dir(args.resources_dir, args.output_dir, os.path.abspath(os.path.join(args.resources_dir, args.config_file)))
+        
+        total_broken_files +=  current_broken_files
+        total_broken_libs += current_broken_libs
     
+    if total_broken_files:
+        print("")
+        print(f"---> !!! Errors occurred while generating docs for {len(total_broken_files)} files (see details above):")
+        for f in total_broken_files:
+            print(f"         - {f}")
+
+    if total_broken_libs:
+        print("")
+        print(f"---> !!! Errors occurred while generating docs for {len(total_broken_libs)} libs (see details above):")
+        for l in total_broken_libs:
+            print(f"         - {l}")
+
     if os.path.isdir(args.output_dir):
+        print("")
         create_toc(args.output_dir, args.toc_file, toc_template=args.toc_template, homepage_template=args.homepage_template)
     else:
         print("No docs were created!")
-    
-    if broken_files:
-        print("")
-        print(f"---> !!! Errors occurred while generating docs for {len(broken_files)} files (see details above):")
-        for f in broken_files:
-            print(f"         - {f}")
+
+    print("")
 
 if __name__ == "__main__":
     main()
