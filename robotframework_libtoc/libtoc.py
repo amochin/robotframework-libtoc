@@ -7,6 +7,10 @@ import argparse
 from datetime import datetime
 import robot.libdoc
 
+class LibdocException(Exception):
+    def __init__(self, broken_file):
+        self.broken_file = broken_file
+
 def toc(links, timestamp, home_page_path, template_file=""):
     """
     Returns a HTML source code for TOC (table of contents) page, based on the template and including
@@ -139,7 +143,7 @@ def create_docs_for_dir(resource_dir, output_dir, config_file):
             print(f">> Generating docs for resource: {relative_path}")
             return_code = robot.libdoc.libdoc(real_path, target_path)
             if return_code > 0:
-                raise Exception(f"Libdoc error! Return code: {return_code}")
+                raise LibdocException(relative_path)
             print("")
 
     libs = doc_config["libs"]
@@ -149,7 +153,7 @@ def create_docs_for_dir(resource_dir, output_dir, config_file):
         print(f">> Generating docs for library: {lib_str_with_resolved_vars}")  
         return_code = robot.libdoc.libdoc(lib_str_with_resolved_vars, target_path)
         if return_code > 0:
-            raise Exception(f"Libdoc error! Return code: {return_code}")
+            raise LibdocException(relative_path)
         print("")
 
 def create_toc(html_docs_dir, toc_file="keyword_docs.html", homepage_file="homepage.html", toc_template="", homepage_template=""):
@@ -206,12 +210,17 @@ def main():
 
     for child_element in os.listdir(args.resources_dir):                
         child_element_path = os.path.join(args.resources_dir, child_element)
-        if os.path.isdir(child_element_path):
-            config_file = os.path.join(child_element_path, args.config_file)
-            if os.path.isfile(config_file):
-                create_docs_for_dir(child_element_path, args.output_dir, os.path.abspath(config_file))
-        elif child_element == args.config_file:
-            create_docs_for_dir(args.resources_dir, args.output_dir, os.path.abspath(os.path.join(args.resources_dir, args.config_file)))            
+        try:
+            if os.path.isdir(child_element_path):
+                config_file = os.path.join(child_element_path, args.config_file)
+                if os.path.isfile(config_file):
+                    create_docs_for_dir(child_element_path, args.output_dir, os.path.abspath(config_file))
+            elif child_element == args.config_file:
+                create_docs_for_dir(args.resources_dir, args.output_dir, os.path.abspath(os.path.join(args.resources_dir, args.config_file)))            
+        except LibdocException as e:
+            print(f"---> !!! FAILED generating docs for {e.broken_file}!")
+            print("Proceed with the next file...")
+            print("")
     
     if os.path.isdir(args.output_dir):
         create_toc(args.output_dir, args.toc_file, toc_template=args.toc_template, homepage_template=args.homepage_template)
