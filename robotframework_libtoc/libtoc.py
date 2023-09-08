@@ -218,9 +218,8 @@ def main():
             elif child_element == args.config_file:
                 create_docs_for_dir(args.resources_dir, args.output_dir, os.path.abspath(os.path.join(args.resources_dir, args.config_file)))            
         except LibdocException as e:
-            print(f"---> !!! FAILED generating docs for {e.broken_file}!")
+            print(f"---> !!! Error while generating docs for '{e.broken_file}'")
             broken_files.append(e.broken_file)
-            print("Proceed with the next file...")
             print("")
     
     if os.path.isdir(args.output_dir):
@@ -230,7 +229,7 @@ def main():
     
     if broken_files:
         print("")
-        print(f"---> !!! FAILED generating docs for {len(broken_files)} files (see details above):")
+        print(f"---> !!! Errors occurred while generating docs for {len(broken_files)} files (see details above):")
         for f in broken_files:
             print(f"         - {f}")
 
