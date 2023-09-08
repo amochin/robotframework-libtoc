@@ -187,7 +187,7 @@ def create_toc(html_docs_dir, toc_file="keyword_docs.html", homepage_file="homep
     with open(toc_file_path, 'w', encoding="utf8") as f:
         f.write(toc(doc_files_links, current_date_time, os.path.relpath(homepage_path, os.path.abspath(html_docs_dir)), toc_template))
     
-    print("Finished. Output file: {}".format(os.path.abspath(toc_file_path)))
+    print("TOC finished. Output file: {}".format(os.path.abspath(toc_file_path)))
 
 def main():
     parser = argparse.ArgumentParser(description="Generates keyword docs using libdoc based on config files in direct subfolders of the resources dir and creates a TOC")
@@ -201,6 +201,8 @@ def main():
     args = parser.parse_args()
 
     print(f"Creating docs for: {os.path.abspath(args.resources_dir)}")
+
+    broken_files = []
 
     if os.path.isdir(args.output_dir):
         print(f"Output dir already exists, deleting it: {args.output_dir}")
@@ -217,6 +219,7 @@ def main():
                 create_docs_for_dir(args.resources_dir, args.output_dir, os.path.abspath(os.path.join(args.resources_dir, args.config_file)))            
         except LibdocException as e:
             print(f"---> !!! FAILED generating docs for {e.broken_file}!")
+            broken_files.append(e.broken_file)
             print("Proceed with the next file...")
             print("")
     
@@ -224,6 +227,12 @@ def main():
         create_toc(args.output_dir, args.toc_file, toc_template=args.toc_template, homepage_template=args.homepage_template)
     else:
         print("No docs were created!")
+    
+    if broken_files:
+        print("")
+        print(f"---> !!! FAILED generating docs for {len(broken_files)} files (see details above):")
+        for f in broken_files:
+            print(f"         - {f}")
 
 if __name__ == "__main__":
     main()
