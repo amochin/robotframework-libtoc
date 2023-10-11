@@ -1,4 +1,5 @@
 import os
+import sys
 import shutil
 import glob
 import argparse
@@ -197,9 +198,13 @@ def main():
     parser.add_argument("--config_file", default=".libtoc", help="File in each folder with docs generation configs")
     parser.add_argument("--toc_file", default="keyword_docs.html", help="Name of the TOC file generated")
     parser.add_argument("--toc_template", default="", help = "Custom HTML template for the TOC file")
-    parser.add_argument("--homepage_template", default="", help = "Custom HTML template for the homepage file")  
+    parser.add_argument("--homepage_template", default="", help = "Custom HTML template for the homepage file")
+    parser.add_argument("-P", "--pythonpath", default="", help="Additional locations where to search for libraries and resources similarly as when running tests")
 
     args = parser.parse_args()
+
+    if args.pythonpath:
+        sys.path.insert(0, args.pythonpath)
 
     print(f"Creating docs for: {os.path.abspath(args.resources_dir)}")
 
