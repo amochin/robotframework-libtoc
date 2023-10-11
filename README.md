@@ -71,3 +71,7 @@ pip install robotframework-libtoc
 ## How to change the TOC and the homepage HTML templates
 The default HTML template files are located in the python installation directory (usually something like `<python_dir>\lib\site-packages\robotframework_libtoc`) and can be changed if necessary.   
 It's also possible to provide custom HTML template files using the `--toc_template` and `--homepage_template` options.
+
+## How to set the Python Path
+In case you need to extend the list of paths where the libraries are searched during the docs generation,
+you can set the **PYTHONPATH environment variable** - see more in [Robot Framework User Guide](http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#pythonpath).
