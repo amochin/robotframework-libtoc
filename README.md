@@ -57,6 +57,7 @@ pip install robotframework-libtoc
     - `--toc_file`
     - `--toc_template`
     - `--homepage_template`
+    - `-P, --pythonpath`
 
     Examples:
     ```shell
@@ -73,5 +74,8 @@ The default HTML template files are located in the python installation directory
 It's also possible to provide custom HTML template files using the `--toc_template` and `--homepage_template` options.
 
 ## How to set the Python Path
-In case you need to extend the list of paths where the libraries are searched during the docs generation,
-you can set the **PYTHONPATH environment variable** - see more in [Robot Framework User Guide](http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#pythonpath).
+There are two ways to extend the list of paths where the libraries are searched for:
+1. Using the `--pythonpath` option
+2. Set the **PYTHONPATH** environment variable
+
+See more in [Robot Framework User Guide](http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#pythonpath).
