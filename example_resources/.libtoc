@@ -8,3 +8,4 @@
 # Use RF library names with params - like for libdoc
 SeleniumLibrary
 EggplantLibrary::E:/DEV/GIT/robotframework-eggplant/tests/keywords/eggPlantScripts/SuiteOne.suite
+somepy.mylib.mypy
