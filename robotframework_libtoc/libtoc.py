@@ -99,7 +99,7 @@ def add_files_from_folder(folder, base_dir_path, root=True):
     for item in os.listdir(folder):
         item_path = os.path.abspath(os.path.join(folder, item))
         if item.endswith(".html"):
-            name_without_ext = item.split('.')[0]            
+            name_without_ext = os.path.splitext(item)[0]            
             result_str += """<a class="link_not_selected" href="{}" target="targetFrame">{}</a>
             """.format(os.path.relpath(item_path, base_dir_path), name_without_ext)
         else:
