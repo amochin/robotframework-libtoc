@@ -193,7 +193,7 @@ def create_toc(html_docs_dir, toc_file="keyword_docs.html", homepage_file="homep
 
 def main():
     parser = argparse.ArgumentParser(description="Generates keyword docs using libdoc based on config files in direct subfolders of the resources dir and creates a TOC")
-    parser.add_argument("resources_dir", help="Folder with resources and keywords files")
+    parser.add_argument("resources_dirs", nargs="+", help="Folders with resources and keywords files")
     parser.add_argument("-d", "--output_dir", default="docs", help="Folder to create the docs in")
     parser.add_argument("--config_file", default=".libtoc", help="File in each folder with docs generation configs")
     parser.add_argument("--toc_file", default="keyword_docs.html", help="Name of the TOC file generated")
@@ -206,26 +206,29 @@ def main():
     if args.pythonpath:
         sys.path.insert(0, args.pythonpath)
 
-    print(f"Creating docs for: {os.path.abspath(args.resources_dir)}")
 
     if os.path.isdir(args.output_dir):
         print(f"Output dir already exists, deleting it: {args.output_dir}")
         shutil.rmtree(args.output_dir)
     total_broken_files = []
     total_broken_libs = []
-    for child_element in os.listdir(args.resources_dir):                
-        child_element_path = os.path.join(args.resources_dir, child_element)
-        current_broken_files = []
-        current_broken_libs = []
-        if os.path.isdir(child_element_path):
-            config_file = os.path.join(child_element_path, args.config_file)
-            if os.path.isfile(config_file):
-                current_broken_files, current_broken_libs = create_docs_for_dir(child_element_path, args.output_dir, os.path.abspath(config_file))
-        elif child_element == args.config_file:
-            current_broken_files, current_broken_libs = create_docs_for_dir(args.resources_dir, args.output_dir, os.path.abspath(os.path.join(args.resources_dir, args.config_file)))
-        
-        total_broken_files +=  current_broken_files
-        total_broken_libs += current_broken_libs
+    
+    for resources_dir in args.resources_dirs:
+        print("")
+        print(f"> Creating docs for dir: {os.path.abspath(resources_dir)}")
+        for child_element in os.listdir(resources_dir):
+            child_element_path = os.path.join(resources_dir, child_element)
+            current_broken_files = []
+            current_broken_libs = []
+            if os.path.isdir(child_element_path):
+                config_file = os.path.join(child_element_path, args.config_file)
+                if os.path.isfile(config_file):
+                    current_broken_files, current_broken_libs = create_docs_for_dir(child_element_path, args.output_dir, os.path.abspath(config_file))
+            elif child_element == args.config_file:
+                current_broken_files, current_broken_libs = create_docs_for_dir(resources_dir, args.output_dir, os.path.abspath(os.path.join(resources_dir, args.config_file)))
+            
+            total_broken_files +=  current_broken_files
+            total_broken_libs += current_broken_libs
     
     if total_broken_files:
         print("")
