@@ -141,7 +141,7 @@ def create_docs_for_dir(resource_dir, output_dir, config_file):
             relative_path = os.path.relpath(real_path, resource_dir)
             target_path = os.path.join(target_dir, relative_path.rpartition('.')[0] + ".html")
             print(f">> Generating docs for resource: {relative_path}")
-            return_code = robot.libdoc.libdoc(real_path, target_path)
+            return_code = robot.libdoc.libdoc(real_path, target_path, quiet=True)
             if return_code > 0:
                 broken_files.append(relative_path)
 
@@ -151,7 +151,7 @@ def create_docs_for_dir(resource_dir, output_dir, config_file):
         lib_str_with_resolved_vars = os.path.expandvars(lib)
         target_path = os.path.join(target_dir, lib_str_with_resolved_vars.partition("::")[0] + ".html")
         print(f">> Generating docs for library: {lib_str_with_resolved_vars}") 
-        return_code = robot.libdoc.libdoc(lib_str_with_resolved_vars, target_path)
+        return_code = robot.libdoc.libdoc(lib_str_with_resolved_vars, target_path, quiet=True)
         if return_code > 0:
             broken_libs.append(lib_str_with_resolved_vars)
     return broken_files, broken_libs
