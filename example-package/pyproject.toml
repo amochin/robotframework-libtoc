@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "example-package"
+version = "0.0.1"
+description = "This is just an example package to demonstrate the package loading feature of libtoc"
+authors = []
+packages = [{include = "example_package", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.7"
+robotframework = ">=4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

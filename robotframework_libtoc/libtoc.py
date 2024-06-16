@@ -4,6 +4,8 @@ import shutil
 import glob
 import argparse
 from datetime import datetime
+from pathlib import Path
+import importlib_resources
 import robot.libdoc
 
 class LibdocException(Exception):
@@ -60,6 +62,7 @@ def read_config(config_file):
     """
     sections = {
         "paths": {"markers":["[paths]"], "values":[]},
+        "packages": {"markers":["[packages]"], "values": []},
         "libs":  {"markers": ["[libs]", "[libraries]"], "values":[]}
     }
     
@@ -79,7 +82,11 @@ def read_config(config_file):
                     if not skip_line and section_to_add:
                         sections[section_to_add]["values"].append(stripped_line)
     
-    return {"paths": sections["paths"]["values"], "libs": sections["libs"]["values"]}
+    return {
+        "paths": sections["paths"]["values"],
+        "packages": sections["packages"]["values"],
+        "libs": sections["libs"]["values"]
+    }
 
 def add_files_from_folder(folder, base_dir_path, root=True):
     """
@@ -144,6 +151,21 @@ def create_docs_for_dir(resource_dir, output_dir, config_file):
             return_code = robot.libdoc.libdoc(real_path, target_path, quiet=True)
             if return_code > 0:
                 broken_files.append(relative_path)
+
+    package_definitions = doc_config["packages"]
+    for package_definition in package_definitions:
+        package_name, path_pattern = package_definition.split(':', 1)
+        package_anchor = importlib_resources.files(package_name)
+        with importlib_resources.as_file(package_anchor) as package_path:
+            package_resource_files = package_path.glob(path_pattern)
+            for real_path in package_resource_files:
+                relative_path = Path(package_name) / real_path.relative_to(package_path)
+                target_path = os.path.join(target_dir, relative_path.with_suffix(".html"))
+                print(f">> Generating docs for resource: {relative_path}")
+                return_code = robot.libdoc.libdoc(real_path, target_path, quiet=True)
+                if return_code > 0:
+                    broken_files.append(relative_path)
+
 
     libs = doc_config["libs"]
     broken_libs = []
