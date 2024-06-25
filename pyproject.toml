@@ -13,9 +13,6 @@ python = ">=3.7"
 robotframework = ">=4"
 importlib-resources = "~5.12"
 
-[tool.poetry.group.dev.dependencies]
-example_package = { path = "./example-package", develop = true }
-
 [tool.poetry.scripts]
 libtoc = "robotframework_libtoc.libtoc:main"
 
