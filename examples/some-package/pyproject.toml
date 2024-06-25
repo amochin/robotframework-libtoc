@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "example-package"
+name = "some-package"
 version = "0.0.1"
 description = "This is just an example package to demonstrate the package loading feature of libtoc"
 authors = []
