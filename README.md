@@ -19,7 +19,8 @@ in the intranet or uploaded as CI artifact - so everybody can easily access the 
 - The tool goes through the specified folders with RF resources and it's **direct** subfolders
 - It looks for the **config files** named `.libtoc` which contain items you would like to create docs for:
     1. Paths to resource files in [glob format](https://en.wikipedia.org/wiki/Glob_(programming))
-    2. Installed RF libraries - names and necessary import params like described in [libdoc user guide](https://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#general-usage)
+    2. Paths to resources files in [glob format](https://en.wikipedia.org/wiki/Glob_(programming)) inside packages loaded from the pythonpath
+    3. Installed RF libraries - names and necessary import params like described in [libdoc user guide](https://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#general-usage)
         > Other libdoc CLI options (e.g. version or name of the output file) are not supported
 - Then it generates the docs using `libdoc` - both for files paths, resolved from the glob patterns, and for the installed libraries. The created HTML files are placed in the **libtoc output_dir** - keeping the original subfolder structure of resources
 - Finally it generates a **TOC (Table of Contents)** HTML page with links to all the generated HTML files.
@@ -32,6 +33,9 @@ in the intranet or uploaded as CI artifact - so everybody can easily access the 
 **/*.resource
 **/*.py
 
+[packages]
+example_package:resources/**/*.resource
+
 [libs]
 # Use RF library names with params - like for libdoc
 SeleniumLibrary
@@ -39,7 +43,7 @@ Remote::http://10.0.0.42:8270
 # You can use environment variables in lib params
 SomeLib::$some_env_var/somepath
 ```
-> The config file must contain at least one of the sections - `[paths]`, `[libs]` or both
+> The config file must contain at least one of the sections - `[paths]`, `[libs]`, `[packages]`
 ## How to install it
 ### System requirements
 - Python >=3.7

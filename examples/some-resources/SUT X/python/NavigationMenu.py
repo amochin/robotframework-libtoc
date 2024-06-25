@@ -1,5 +1,4 @@
 from robot.libraries.BuiltIn import BuiltIn
-import robot.api.logger as log
 
 PAGE_TITLE = 'Some title'
 

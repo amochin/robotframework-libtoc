@@ -1,0 +1,18 @@
+[paths]
+# Use glob patterns
+some-resources/**/*.robot
+some-resources/**/*.resource
+some-resources/**/*.py
+
+
+[libs]
+# Use RF library names with params - like for libdoc
+# SeleniumLibrary
+# EggplantLibrary::E:/DEV/GIT/robotframework-eggplant/tests/keywords/eggPlantScripts/SuiteOne.suite
+some-libs.mylib.mypy
+
+
+[packages]
+# Use package name in python path and glob pattern separated by :
+some-package:resources/**/*.resource
+some-package:libs/**/*.py
