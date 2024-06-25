@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "robotframework-libtoc"
-version = "1.4.1"
+version = "1.4.2"
 description = "Docs and TOC generator for Robot Framework resources and libs"
 authors = ["Andre Mochinin"]
 license = "Apache-2.0"
