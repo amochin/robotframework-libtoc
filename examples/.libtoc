@@ -4,13 +4,14 @@ some-resources/**/*.robot
 some-resources/**/*.resource
 some-resources/**/*.py
 
-
 [libs]
 # Use RF library names with params - like for libdoc
 # SeleniumLibrary
-# EggplantLibrary::E:/DEV/GIT/robotframework-eggplant/tests/keywords/eggPlantScripts/SuiteOne.suite
+# Remote::http://10.0.0.42:8270
+# Import a library from PYTHONPATH using fully qualified name
 some-libs.mylib.mypy
-
+# You can use environment variables in lib params
+# SomeLib::$some_env_var/somepath
 
 [packages]
 # Use package name in python path and glob pattern separated by :
