@@ -113,7 +113,7 @@ def add_files_from_folder(folder, base_dir_path, root=True):
         result_str += """<div class="collapsible_content">
         """
 
-    for item in os.listdir(folder):
+    for item in sorted(os.listdir(folder)):
         item_path = os.path.abspath(os.path.join(folder, item))
         if item.endswith(".html"):
             name_without_ext = os.path.splitext(item)[0]
