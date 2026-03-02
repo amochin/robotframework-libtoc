@@ -1,6 +1,8 @@
 import argparse
 import glob
+import json
 import os
+import re
 import shutil
 import sys
 from datetime import datetime
@@ -15,7 +17,7 @@ class LibdocException(Exception):
         self.broken_file = broken_file
 
 
-def toc(links, timestamp, home_page_path, template_file=""):
+def toc(links, timestamp, home_page_path, template_file="", search_index=None):
     """
     Returns a HTML source code for TOC (table of contents) page, based on the template and including
     the provided `links`, generation `timestamp` and the `home_page_path` HTML file as a landing page.
@@ -32,20 +34,29 @@ def toc(links, timestamp, home_page_path, template_file=""):
     # and convert the formatting brackets back
     html_with_escaped_braces = html_with_escaped_braces.replace("{{}}", "{}")
 
-    return html_with_escaped_braces.format(home_page_path, links, timestamp)
+    result = html_with_escaped_braces.format(home_page_path, links, timestamp)
+
+    # inject search index data (done after format() to avoid brace escaping issues)
+    if search_index is not None:
+        search_json = json.dumps(search_index, ensure_ascii=False)
+        search_json = search_json.replace("</script>", r"<\/script>")
+        result = result.replace("SEARCH_INDEX_DATA", search_json)
+    else:
+        result = result.replace("SEARCH_INDEX_DATA", "[]")
+
+    return result
 
 
-def homepage(timestamp, template_file=""):
+def homepage(template_file=""):
     """
-    Returns a HTML source code for a landing page, based on the template and includig the provided `timestamp`.
+    Returns a HTML source code for a landing page, based on the template.
     """
     if template_file == "":
         template_file = os.path.join(
             os.path.dirname(__file__), "homepage_template.html"
         )
     with open(template_file, encoding="utf_8") as f:
-        html_template = f.read()
-    return html_template.format(timestamp)
+        return f.read()
 
 
 def read_config(config_file):
@@ -94,6 +105,108 @@ def read_config(config_file):
         "packages": sections["packages"]["values"],
         "libs": sections["libs"]["values"],
     }
+
+
+def extract_libdoc_data(html_file_path):
+    """
+    Extracts the libdoc JSON data from a generated libdoc HTML file.
+    The libdoc variable is embedded as a JSON object in a script tag.
+    """
+    with open(html_file_path, encoding="utf-8") as f:
+        content = f.read()
+    for line in content.split("\n"):
+        stripped = line.strip()
+        if stripped.startswith("libdoc") and '"specversion"' in stripped:
+            json_start = stripped.index("{")
+            json_str = stripped[json_start:]
+            try:
+                return json.loads(json_str)
+            except json.JSONDecodeError:
+                print(f"Warning: Failed to parse libdoc JSON (for global searches) in file {html_file_path}")
+    return None
+
+
+def build_search_index(src_dir, base_dir):
+    """
+    Builds a search index from all libdoc HTML files in src_dir.
+    Returns a list of library/resource entries with their keywords.
+    """
+    index = []
+    for dirpath, dirnames, filenames in os.walk(src_dir):
+        dirnames.sort()
+        for file_name in sorted(filenames):
+            if file_name.endswith(".html") and file_name != "homepage.html":
+                file_path = os.path.join(dirpath, file_name)
+                data = extract_libdoc_data(file_path)
+                if data:
+                    rel_path = os.path.relpath(file_path, base_dir)
+                    rel_path = rel_path.replace("\\", "/")
+                    keywords = []
+                    for kw in data.get("keywords", []):
+                        args_list = []
+                        for a in kw.get("args", []):
+                            if isinstance(a, str):
+                                args_list.append(a)
+                            elif isinstance(a, dict):
+                                args_list.append(
+                                    a.get("repr", a.get("name", ""))
+                                )
+                        keywords.append(
+                            {
+                                "name": kw.get("name", ""),
+                                "args": ", ".join(args_list),
+                                "shortdoc": kw.get("shortdoc", ""),
+                                "tags": kw.get("tags", []),
+                            }
+                        )
+                    doc_text = re.sub(r"<[^>]+>", "", data.get("doc", ""))
+                    # file_name without .html extension for file searching
+                    name_without_ext = os.path.splitext(file_name)[0]
+                    index.append(
+                        {
+                            "name": data.get("name", ""),
+                            "fileName": name_without_ext,
+                            "path": rel_path,
+                            "doc": doc_text,
+                            "type": data.get("type", ""),
+                            "keywords": keywords,
+                        }
+                    )
+    return index
+
+
+def inject_theme_script(src_dir):
+    """
+    Injects a small <script> into each libdoc HTML file in src_dir
+    that reads the theme from localStorage and sets data-theme on <html>.
+    This allows libdoc pages loaded in an iframe to respect the libtoc theme choice
+    even when file:// cross-origin prevents parent frame DOM access.
+    """
+    theme_script = (
+        '\n<script>!function(){var t=localStorage.getItem("libtoc-theme")'
+        '||(window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");'
+        'document.documentElement.setAttribute("data-theme",t);'
+        'document.addEventListener("DOMContentLoaded",function(){'
+        'document.documentElement.setAttribute("data-theme",t)});'
+        'document.addEventListener("keydown",function(e){'
+        'if((e.ctrlKey||e.metaKey)&&e.key==="k"){'
+        'e.preventDefault();'
+        'window.parent.postMessage("libtoc-open-search","*")}})'
+        '}()</script>\n'
+    )
+    for dirpath, dirnames, filenames in os.walk(src_dir):
+        dirnames.sort()
+        for file_name in sorted(filenames):
+            if file_name.endswith(".html") and file_name != "homepage.html":
+                file_path = os.path.join(dirpath, file_name)
+                with open(file_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+                # Insert before </head> - uses DOMContentLoaded + setTimeout
+                # to override libdoc's own theme initialization
+                if "libtoc-theme" not in content:
+                    content = content.replace("</head>", theme_script + "</head>", 1)
+                    with open(file_path, "w", encoding="utf-8") as f:
+                        f.write(content)
 
 
 def add_files_from_folder(folder, base_dir_path, root=True):
@@ -262,7 +375,13 @@ def create_toc(
     current_date_time = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
     doc_files_links = add_files_from_folder(src_subdir, os.path.abspath(html_docs_dir))
     with open(homepage_path, "w", encoding="utf8") as f:
-        f.write(homepage(current_date_time, homepage_template))
+        f.write(homepage(homepage_template))
+
+    # build search index from generated docs
+    search_index = build_search_index(src_subdir, os.path.abspath(html_docs_dir))
+
+    # inject theme script into all libdoc HTML files
+    inject_theme_script(src_subdir)
 
     # create TOC
     toc_file_path = os.path.join(html_docs_dir, toc_file)
@@ -273,6 +392,7 @@ def create_toc(
                 current_date_time,
                 os.path.relpath(homepage_path, os.path.abspath(html_docs_dir)),
                 toc_template,
+                search_index,
             )
         )
 
