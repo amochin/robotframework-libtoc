@@ -14,7 +14,6 @@
             --highlighted-background-color: yellow;
             --highlighted-text-color: black;
             --less-important-text-color: gray;
-            --link-color: #00e;
             --sidebar-bg: #f8f9fa;
             --sidebar-text: #495057;
             --sidebar-text-hover: #212529;
@@ -31,11 +30,10 @@
             --robot-highlight: yellow;
             --highlighted-background-color: #b8860b;
             --highlighted-text-color: #fff;
-            --less-important-text-color: #5b6a6f;
-            --link-color: #52adff;
+            --less-important-text-color: #8fa8ae;
             --sidebar-bg: #131920;
-            --sidebar-text: #a8b2b8;
-            --sidebar-text-hover: #e2e1d7;
+            --sidebar-text: #e2e1d7;
+            --sidebar-text-hover: #ffffff;
             --sidebar-text-active: #ffffff;
             --sidebar-border: #4e4e4e;
             --sidebar-accent: #00c0b5;
@@ -56,7 +54,7 @@
             padding: 6px 8px 6px 16px;
             width: 100%;
             text-align: left;
-            font-size: 14px;
+            font-size: 16px;
             border: none;
             font-family: inherit;
             display: flex;
@@ -66,7 +64,7 @@
 
         .collapsible::before {
             content: '\25B6';
-            font-size: 8px;
+            font-size: 10px;
             transition: transform 0.15s ease;
             display: inline-block;
             flex-shrink: 0;
@@ -92,7 +90,7 @@
 
         .sidenav {
             height: 100%;
-            width: 280px;
+            width: 300px;
             position: fixed;
             z-index: 1;
             top: 0;
@@ -101,10 +99,11 @@
             background-color: var(--sidebar-bg);
             overflow: hidden;
             resize: none;
-            font-size: 14px;
+            font-size: 16px;
             display: flex;
             flex-direction: column;
             border-right: 1px solid var(--sidebar-border);
+            transition: transform 0.25s ease;
         }
 
         .sidenav a:hover {
@@ -143,7 +142,7 @@
         .sidenav-footer {
             padding: 8px 12px;
             color: var(--less-important-text-color);
-            font-size: 12px;
+            font-size: 16px;
             border-top: 1px solid var(--sidebar-border);
             margin-top: auto;
             flex-shrink: 0;
@@ -164,7 +163,7 @@
 
         .sidenav-title h2 {
             margin: 0;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 600;
             color: var(--sidebar-text-active);
             white-space: nowrap;
@@ -184,7 +183,7 @@
 
         .sidenav-section-label {
             padding: 12px 16px 4px;
-            font-size: 11px;
+            font-size: 14px;
             font-weight: 600;
             text-transform: uppercase;
             color: var(--less-important-text-color);
@@ -196,17 +195,15 @@
             text-decoration: none;
             color: var(--sidebar-text);
             display: block;
-            font-size: 13px;
-            opacity: 0.7;
+            font-size: 16px;
         }
 
         .sidenav-ext-link:hover {
-            opacity: 1;
             color: var(--sidebar-text-hover);
         }
 
         .main {
-            margin-left: 280px;
+            margin-left: 300px;
             height: 100%;
         }
 
@@ -222,7 +219,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 13px;
+            font-size: 16px;
             font-family: inherit;
             transition: border-color 0.15s, color 0.15s;
         }
@@ -247,7 +244,7 @@
             border: 1px solid var(--sidebar-border);
             border-radius: 4px;
             padding: 2px 6px;
-            font-size: 11px;
+            font-size: 14px;
             font-family: monospace;
             color: var(--less-important-text-color);
         }
@@ -264,7 +261,7 @@
             color: var(--sidebar-text);
             cursor: pointer;
             padding: 6px 8px;
-            font-size: 16px;
+            font-size: 20px;
             line-height: 1;
             transition: color 0.15s, border-color 0.15s;
             flex-shrink: 0;
@@ -326,10 +323,14 @@
             flex: 1;
             border: none;
             outline: none;
-            font-size: 16px;
+            font-size: 20px;
             font-family: inherit;
             background: transparent;
             color: var(--text-color);
+        }
+
+        .search-input-wrapper input::placeholder {
+            color: var(--less-important-text-color);
         }
 
         .search-esc {
@@ -337,7 +338,7 @@
             border: 1px solid var(--border-color);
             border-radius: 4px;
             padding: 2px 8px;
-            font-size: 11px;
+            font-size: 14px;
             font-family: monospace;
             color: var(--less-important-text-color);
             cursor: pointer;
@@ -351,7 +352,7 @@
 
         .search-category {
             padding: 10px 16px 4px;
-            font-size: 11px;
+            font-size: 14px;
             font-weight: 600;
             text-transform: uppercase;
             color: var(--less-important-text-color);
@@ -367,7 +368,6 @@
             transition: background 0.1s;
         }
 
-        .search-result:hover,
         .search-result.selected {
             background: var(--light-background-color);
             border-left-color: var(--robot-highlight);
@@ -376,7 +376,7 @@
         .search-result-name {
             font-weight: 500;
             color: var(--text-color);
-            font-size: 14px;
+            font-size: 16px;
         }
 
         .search-result-name mark,
@@ -388,7 +388,7 @@
         }
 
         .search-result-meta {
-            font-size: 12px;
+            font-size: 16px;
             color: var(--less-important-text-color);
             margin-top: 2px;
             overflow: hidden;
@@ -400,12 +400,12 @@
             padding: 32px 16px;
             text-align: center;
             color: var(--less-important-text-color);
-            font-size: 14px;
+            font-size: 16px;
         }
 
         .search-result-type {
             display: inline-block;
-            font-size: 10px;
+            font-size: 14px;
             padding: 1px 6px;
             border-radius: 4px;
             background: rgba(0, 192, 181, 0.12);
@@ -419,7 +419,7 @@
         .search-footer {
             padding: 8px 16px;
             border-top: 1px solid var(--border-color);
-            font-size: 11px;
+            font-size: 14px;
             color: var(--less-important-text-color);
             display: flex;
             gap: 16px;
@@ -432,17 +432,62 @@
             border-radius: 3px;
             padding: 1px 5px;
             font-family: monospace;
-            font-size: 11px;
+            font-size: 12px;
+        }
+
+        /* Mobile hamburger button */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 200;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--sidebar-border);
+            border-radius: 6px;
+            color: var(--sidebar-text);
+            cursor: pointer;
+            padding: 5px 10px;
+            font-size: 22px;
+            line-height: 1;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-menu-btn:hover {
+            color: var(--sidebar-text-hover);
+            border-color: var(--sidebar-accent);
+        }
+
+        /* Sidenav backdrop */
+        .sidenav-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+
+        .sidenav-backdrop.active {
+            display: block;
         }
 
         /* Responsive */
         @media only screen and (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+
             .sidenav {
-                width: 100%;
-                position: relative;
-                border-right: none;
-                height: auto;
-                max-height: 50vh;
+                transform: translateX(-100%);
+                z-index: 100;
+            }
+
+            .sidenav.sidenav-open {
+                transform: translateX(0);
             }
 
             .main {
@@ -465,6 +510,9 @@
         <iframe name="targetFrame" src="{}" allowTransparency="true" frameborder="0" width="100%" height="98%">
         </iframe>
     </div>
+
+    <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="openSidenav()" aria-label="Open navigation">&#9776;</button>
+    <div id="sidenavBackdrop" class="sidenav-backdrop" onclick="closeSidenav()"></div>
 
     <div id="sidenav" class="sidenav">
         <div class="sidenav-header">
@@ -522,6 +570,8 @@
             });
         }
 
+        var currentIframeSrc = document.querySelector('iframe[name="targetFrame"]').getAttribute('src');
+
         var leaf_links = document.getElementsByClassName("link_not_selected");
         var i;
         for (i = 0; i < leaf_links.length; i++) {
@@ -532,6 +582,8 @@
                     active_leaf_links[j].className = "link_not_selected";
                 }
                 this.className = "link_selected";
+                currentIframeSrc = this.getAttribute('href');
+                closeSidenav();
             });
         }
 
@@ -542,7 +594,10 @@
             var current = getTheme();
             var next = current === 'dark' ? 'light' : 'dark';
             localStorage.setItem('libtoc-theme', next);
-            location.reload();
+            document.documentElement.setAttribute('data-theme', next);
+            updateThemeIcon(next);
+            var iframe = document.querySelector('iframe[name="targetFrame"]');
+            if (iframe) iframe.src = currentIframeSrc;
         }
         function updateThemeIcon(theme) {
             var btn = document.getElementById('themeToggle');
@@ -550,6 +605,17 @@
             btn.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
         }
         updateThemeIcon(getTheme());
+
+        function openSidenav() {
+            document.getElementById('sidenav').classList.add('sidenav-open');
+            document.getElementById('sidenavBackdrop').classList.add('active');
+            document.getElementById('mobileMenuBtn').style.display = 'none';
+        }
+        function closeSidenav() {
+            document.getElementById('sidenav').classList.remove('sidenav-open');
+            document.getElementById('sidenavBackdrop').classList.remove('active');
+            document.getElementById('mobileMenuBtn').style.display = '';
+        }
     </script>
     <script>var searchIndex = SEARCH_INDEX_DATA;</script>
     <div id="searchOverlay" class="search-overlay" onclick="handleOverlayClick(event)">
@@ -703,6 +769,7 @@
                 url += "#" + hash;
             }
             iframe.src = url;
+            currentIframeSrc = url;
             var activeLinks = document.getElementsByClassName("link_selected");
             for (var ai = activeLinks.length - 1; ai >= 0; ai--) {
                 activeLinks[ai].className = "link_not_selected";
@@ -767,6 +834,14 @@
         });
         document.getElementById("searchInput").addEventListener("input", function () {
             performSearch(this.value);
+        });
+        document.getElementById("searchResults").addEventListener("mouseover", function (e) {
+            var el = e.target.closest(".search-result");
+            if (!el) return;
+            var idx = parseInt(el.getAttribute("data-idx"), 10);
+            if (!isNaN(idx) && idx !== selectedResultIndex) {
+                updateSearchSelection(idx);
+            }
         });
     </script>
 </body>

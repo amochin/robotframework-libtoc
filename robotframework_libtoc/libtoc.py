@@ -27,14 +27,9 @@ def toc(links, timestamp, home_page_path, template_file="", search_index=None):
     with open(template_file, encoding="utf8") as f:
         html_template = f.read()
 
-    # double all brackets to make the further formatting work
-    html_with_escaped_braces = html_template.replace("{", "{{")
-    html_with_escaped_braces = html_with_escaped_braces.replace("}", "}}")
-
-    # and convert the formatting brackets back
-    html_with_escaped_braces = html_with_escaped_braces.replace("{{}}", "{}")
-
-    result = html_with_escaped_braces.format(home_page_path, links, timestamp)
+    result = html_template.replace("{}", home_page_path, 1)
+    result = result.replace("{}", links, 1)
+    result = result.replace("{}", timestamp, 1)
 
     # inject search index data (done after format() to avoid brace escaping issues)
     if search_index is not None:
@@ -175,19 +170,28 @@ def build_search_index(src_dir, base_dir):
     return index
 
 
-def inject_theme_script(src_dir):
+def inject_libtoc_script(src_dir):
     """
-    Injects a small <script> into each libdoc HTML file in src_dir
-    that reads the theme from localStorage and sets data-theme on <html>.
-    This allows libdoc pages loaded in an iframe to respect the libtoc theme choice
-    even when file:// cross-origin prevents parent frame DOM access.
+    Injects a small <script> into each libdoc HTML file in src_dir that:
+    - Reads the theme from localStorage and applies data-theme on <html> so the
+      page respects the libtoc theme choice even when file:// cross-origin prevents
+      parent frame DOM access.
+    - Opens all external links (http/https/ftp/protocol-relative) in a new tab to
+      prevent navigation errors when the page is embedded in an iframe.
+    - Forwards Ctrl+K / Cmd+K keypresses to the parent frame to open the libtoc search.
     """
-    theme_script = (
+    libtoc_script = (
         '\n<script>!function(){var t=localStorage.getItem("libtoc-theme")'
         '||(window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");'
         'document.documentElement.setAttribute("data-theme",t);'
         'document.addEventListener("DOMContentLoaded",function(){'
-        'document.documentElement.setAttribute("data-theme",t)});'
+        'document.documentElement.setAttribute("data-theme",t);'
+        'var links=document.getElementsByTagName("a");'
+        'for(var i=0;i<links.length;i++){'
+        'var h=links[i].getAttribute("href");'
+        'if(h&&/^(https?:|ftp:\\/\\/|\\/\\/)/i.test(h)){'
+        'links[i].setAttribute("target","_blank");'
+        'links[i].setAttribute("rel","noopener noreferrer")}}});'
         'document.addEventListener("keydown",function(e){'
         'if((e.ctrlKey||e.metaKey)&&e.key==="k"){'
         'e.preventDefault();'
@@ -204,7 +208,7 @@ def inject_theme_script(src_dir):
                 # Insert before </head> - uses DOMContentLoaded + setTimeout
                 # to override libdoc's own theme initialization
                 if "libtoc-theme" not in content:
-                    content = content.replace("</head>", theme_script + "</head>", 1)
+                    content = content.replace("</head>", libtoc_script + "</head>", 1)
                     with open(file_path, "w", encoding="utf-8") as f:
                         f.write(content)
 
@@ -380,8 +384,8 @@ def create_toc(
     # build search index from generated docs
     search_index = build_search_index(src_subdir, os.path.abspath(html_docs_dir))
 
-    # inject theme script into all libdoc HTML files
-    inject_theme_script(src_subdir)
+    # inject libtoc script into all libdoc HTML files
+    inject_libtoc_script(src_subdir)
 
     # create TOC
     toc_file_path = os.path.join(html_docs_dir, toc_file)
