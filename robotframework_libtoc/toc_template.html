@@ -1,95 +1,849 @@
 <html>
-    <head>
-        <meta charset="utf-8">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKcAAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAAqAAAAAAAAAAAAAAAAAAAALIAAAD/AAAA4AAAANwAAADcAAAA3AAAANwAAADcAAAA3AAAANwAAADcAAAA4AAAAP8AAACxAAAAAAAAAKYAAAD/AAAAuwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC/AAAA/wAAAKkAAAD6AAAAzAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN8AAAD/AAAA+gAAAMMAAAAAAAAAAgAAAGsAAABrAAAAawAAAGsAAABrAAAAawAAAGsAAABrAAAADAAAAAAAAADaAAAA/wAAAPoAAADDAAAAAAAAAIsAAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAANEAAAAAAAAA2gAAAP8AAAD6AAAAwwAAAAAAAAAAAAAAMgAAADIAAAAyAAAAMgAAADIAAAAyAAAAMgAAADIAAAAFAAAAAAAAANoAAAD/AAAA+gAAAMMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADaAAAA/wAAAPoAAADDAAAAAAAAADwAAAB8AAAAAAAAAGAAAABcAAAAAAAAAH8AAABKAAAAAAAAAAAAAAAAAAAA2gAAAP8AAAD6AAAAwwAAAAAAAADCAAAA/wAAACkAAADqAAAA4QAAAAAAAAD7AAAA/wAAALAAAAAGAAAAAAAAANoAAAD/AAAA+gAAAMMAAAAAAAAAIwAAAP4AAAD/AAAA/wAAAGAAAAAAAAAAAAAAAMkAAAD/AAAAigAAAAAAAADaAAAA/wAAAPoAAADDAAAAAAAAAAAAAAAIAAAAcAAAABkAAAAAAAAAAAAAAAAAAAAAAAAAEgAAAAAAAAAAAAAA2gAAAP8AAAD7AAAAywAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4AAAD/AAAAqwAAAP8AAACvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALIAAAD/AAAAsgAAAAAAAAC5AAAA/wAAAMoAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMkAAAD/AAAAvAAAAAAAAAAAAAAAAAAAAKwAAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAArQAAAAAAAAAAwAMAAIABAAAf+AAAP/wAAD/8AAAgBAAAP/wAAD/8AAA//AAAJIwAADHEAAA//AAAP/wAAB/4AACAAQAAwAMAAA==">
     <style>
-    body { font-family: "Lato", sans-serif;}
-    .collapsible { background: none; color: #818181; cursor: pointer; padding: 6px 6px 6px 32px; width: 100%; text-align:
-    left; font-size: 16px; border: none;}
-    .collapsible:hover { color: white;}
-    .collapsible_expanded { color: #818181; }
-    .collapsible_content { padding-left: 15px; display: none; overflow: hidden;}
-    .sidenav { height: 100%; width: 20%; position: fixed; z-index: 1; top: 0; left: 0; text-align: left;
-     background-color: #111; overflow: auto; resize: none;  font-size: 16px;}
-    .sidenav a:hover { color: #f1f1f1;}
-    .link_not_selected { padding: 6px 6px 6px 32px; text-decoration: none; color: #818181; display: block;}
-    .link_selected {padding: 6px 6px 6px 32px; text-decoration: none; color: white; display: block;}    
-    .sidenav p { padding: 0px 0px 0px 12px; color: #818181; position: relative; bottom: 0}
-    .sidenav_open_button {background: none; cursor: pointer; border:none; font-size: 24px;}
-    .sidenav_close_button {background: none; color: white; cursor: pointer; width: 100%; text-align:
-    left; border:none; font-size: 30px; padding-top: 5px; padding-left: 15px}
-    .main { margin-left: 20%;, height: 100%}
+        :root {
+            --background-color: white;
+            --text-color: black;
+            --border-color: #e0e0e2;
+            --light-background-color: #f3f3f3;
+            --robot-highlight: #00c0b5;
+            --highlighted-background-color: yellow;
+            --highlighted-text-color: black;
+            --less-important-text-color: gray;
+            --sidebar-bg: #f8f9fa;
+            --sidebar-text: #495057;
+            --sidebar-text-hover: #212529;
+            --sidebar-text-active: #000000;
+            --sidebar-border: #dee2e6;
+            --sidebar-accent: #00c0b5;
+        }
+
+        [data-theme=dark] {
+            --background-color: #1c2227;
+            --text-color: #e2e1d7;
+            --border-color: #4e4e4e;
+            --light-background-color: #002b36;
+            --robot-highlight: yellow;
+            --highlighted-background-color: #b8860b;
+            --highlighted-text-color: #fff;
+            --less-important-text-color: #8fa8ae;
+            --sidebar-bg: #131920;
+            --sidebar-text: #e2e1d7;
+            --sidebar-text-hover: #ffffff;
+            --sidebar-text-active: #ffffff;
+            --sidebar-border: #4e4e4e;
+            --sidebar-accent: #00c0b5;
+            color-scheme: dark;
+        }
+
+        body {
+            background: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        .collapsible {
+            background: none;
+            color: var(--sidebar-text);
+            cursor: pointer;
+            padding: 6px 8px 6px 16px;
+            width: 100%;
+            text-align: left;
+            font-size: 16px;
+            border: none;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .collapsible::before {
+            content: '\25B6';
+            font-size: 10px;
+            transition: transform 0.15s ease;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .collapsible_expanded::before {
+            transform: rotate(90deg);
+        }
+
+        .collapsible:hover {
+            color: var(--sidebar-text-hover);
+        }
+
+        .collapsible_expanded {
+            color: var(--sidebar-text);
+        }
+
+        .collapsible_content {
+            padding-left: 12px;
+            display: none;
+            overflow: hidden;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 300px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            text-align: left;
+            background-color: var(--sidebar-bg);
+            overflow: hidden;
+            resize: none;
+            font-size: 16px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--sidebar-border);
+            transition: transform 0.25s ease;
+        }
+
+        .sidenav a:hover {
+            color: var(--sidebar-text-hover);
+        }
+
+        .link_not_selected,
+        .link_selected {
+            padding: 5px 8px 5px 16px;
+            text-decoration: none;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .link_not_selected {
+            color: var(--sidebar-text);
+            border-left: 3px solid transparent;
+        }
+
+        .link_not_selected:hover {
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        [data-theme=dark] .link_not_selected:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .link_selected {
+            color: var(--sidebar-text-active);
+            background: rgba(0, 192, 181, 0.12);
+            border-left: 3px solid var(--sidebar-accent);
+        }
+
+        .sidenav-footer {
+            padding: 8px 12px;
+            color: var(--less-important-text-color);
+            font-size: 16px;
+            border-top: 1px solid var(--sidebar-border);
+            margin-top: auto;
+            flex-shrink: 0;
+        }
+
+        .sidenav-header {
+            padding: 12px;
+            border-bottom: 1px solid var(--sidebar-border);
+            flex-shrink: 0;
+        }
+
+        .sidenav-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 4px 8px;
+        }
+
+        .sidenav-title h2 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--sidebar-text-active);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidenav-title svg {
+            flex-shrink: 0;
+        }
+
+        .sidenav-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+
+        .sidenav-section-label {
+            padding: 12px 16px 4px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--less-important-text-color);
+            letter-spacing: 0.05em;
+        }
+
+        .sidenav-ext-link {
+            padding: 5px 8px 5px 16px;
+            text-decoration: none;
+            color: var(--sidebar-text);
+            display: block;
+            font-size: 16px;
+        }
+
+        .sidenav-ext-link:hover {
+            color: var(--sidebar-text-hover);
+        }
+
+        .main {
+            margin-left: 300px;
+            height: 100%;
+        }
+
+        /* Search Button */
+        .search-button {
+            background: rgba(0, 0, 0, 0.03);
+            color: var(--sidebar-text);
+            border: 1px solid var(--sidebar-border);
+            border-radius: 6px;
+            padding: 8px 10px;
+            width: 100%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.15s, color 0.15s;
+        }
+
+        [data-theme=dark] .search-button {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .search-button:hover {
+            color: var(--sidebar-text-hover);
+            border-color: var(--sidebar-accent);
+        }
+
+        .search-button-text {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-kbd {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--sidebar-border);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 14px;
+            font-family: monospace;
+            color: var(--less-important-text-color);
+        }
+
+        [data-theme=dark] .search-kbd {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--sidebar-border);
+            border-radius: 6px;
+            color: var(--sidebar-text);
+            cursor: pointer;
+            padding: 6px 8px;
+            font-size: 20px;
+            line-height: 1;
+            transition: color 0.15s, border-color 0.15s;
+            flex-shrink: 0;
+        }
+
+        .theme-toggle:hover {
+            color: var(--sidebar-text-hover);
+            border-color: var(--sidebar-accent);
+        }
+
+        /* Search Modal */
+        .search-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            padding-top: 8vh;
+        }
+
+        .search-overlay.active {
+            display: flex;
+        }
+
+        .search-modal {
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            width: 620px;
+            max-width: 90vw;
+            max-height: 72vh;
+            display: flex;
+            flex-direction: column;
+            align-self: flex-start;
+            overflow: hidden;
+        }
+
+        .search-input-wrapper {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            gap: 10px;
+        }
+
+        .search-input-wrapper svg {
+            width: 20px;
+            height: 20px;
+            color: var(--sidebar-accent);
+            flex-shrink: 0;
+        }
+
+        .search-input-wrapper input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 20px;
+            font-family: inherit;
+            background: transparent;
+            color: var(--text-color);
+        }
+
+        .search-input-wrapper input::placeholder {
+            color: var(--less-important-text-color);
+        }
+
+        .search-esc {
+            background: var(--light-background-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 14px;
+            font-family: monospace;
+            color: var(--less-important-text-color);
+            cursor: pointer;
+        }
+
+        .search-results {
+            overflow-y: auto;
+            padding: 4px 0;
+            flex: 1;
+        }
+
+        .search-category {
+            padding: 10px 16px 4px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--less-important-text-color);
+            letter-spacing: 0.05em;
+        }
+
+        .search-result {
+            padding: 8px 16px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            border-left: 3px solid transparent;
+            transition: background 0.1s;
+        }
+
+        .search-result.selected {
+            background: var(--light-background-color);
+            border-left-color: var(--robot-highlight);
+        }
+
+        .search-result-name {
+            font-weight: 500;
+            color: var(--text-color);
+            font-size: 16px;
+        }
+
+        .search-result-name mark,
+        .search-result-meta mark {
+            background: var(--highlighted-background-color);
+            color: var(--highlighted-text-color);
+            border-radius: 2px;
+            padding: 0 1px;
+        }
+
+        .search-result-meta {
+            font-size: 16px;
+            color: var(--less-important-text-color);
+            margin-top: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .search-empty {
+            padding: 32px 16px;
+            text-align: center;
+            color: var(--less-important-text-color);
+            font-size: 16px;
+        }
+
+        .search-result-type {
+            display: inline-block;
+            font-size: 14px;
+            padding: 1px 6px;
+            border-radius: 4px;
+            background: rgba(0, 192, 181, 0.12);
+            color: var(--robot-highlight);
+            margin-left: 8px;
+            vertical-align: middle;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .search-footer {
+            padding: 8px 16px;
+            border-top: 1px solid var(--border-color);
+            font-size: 14px;
+            color: var(--less-important-text-color);
+            display: flex;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .search-footer kbd {
+            background: var(--light-background-color);
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            padding: 1px 5px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        /* Mobile hamburger button */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 200;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--sidebar-border);
+            border-radius: 6px;
+            color: var(--sidebar-text);
+            cursor: pointer;
+            padding: 5px 10px;
+            font-size: 22px;
+            line-height: 1;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-menu-btn:hover {
+            color: var(--sidebar-text-hover);
+            border-color: var(--sidebar-accent);
+        }
+
+        /* Sidenav backdrop */
+        .sidenav-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+
+        .sidenav-backdrop.active {
+            display: block;
+        }
+
+        /* Responsive */
+        @media only screen and (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .sidenav {
+                transform: translateX(-100%);
+                z-index: 100;
+            }
+
+            .sidenav.sidenav-open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+        }
     </style>
-    </head>
-    <body>
-    
+</head>
+
+<body>
+    <script>
+        (function () {
+            var saved = localStorage.getItem('libtoc-theme');
+            var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
     <div id="main" class="main">
-    <div>
-    <button id="openNav" class="sidenav_open_button" onclick="sidenav_open()" style="display:none">&#9776;</button>
+        <iframe name="targetFrame" src="{}" allowTransparency="true" frameborder="0" width="100%" height="98%">
+        </iframe>
     </div>
-    <iframe name="targetFrame" src="{}" allowTransparency="true" frameborder="0" width="100%" height="98%">
-    </iframe>
-    </div>
-    
+
+    <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="openSidenav()" aria-label="Open navigation">&#9776;</button>
+    <div id="sidenavBackdrop" class="sidenav-backdrop" onclick="closeSidenav()"></div>
+
     <div id="sidenav" class="sidenav">
-    <button class="sidenav_close_button" onclick="sidenav_close()">&times;</button>
-    <a class="link_not_selected" href="http://robotframework.org/robotframework/" target="targetFrame">Robot Framework Documentation
-    </a>
-    <hr>
-    {}
-    <hr>
-    <p>
-    Created: {}
-    </p>
+        <div class="sidenav-header">
+            <div class="sidenav-title">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                    viewBox="0 0 202.4325 202.34125" height="28" width="28">
+                    <g transform="matrix(1.25,0,0,-1.25,0,202.34125)">
+                        <g>
+                            <g clip-path="none">
+                                <g transform="translate(52.4477,88.1268)">
+                                    <path fill="#00c0b5"
+                                        d="m 0,0 c 0,7.6 6.179,13.779 13.77,13.779 7.6,0 13.779,-6.179 13.779,-13.779 0,-2.769 -2.238,-5.007 -4.998,-5.007 -2.761,0 -4.999,2.238 -4.999,5.007 0,2.078 -1.695,3.765 -3.782,3.765 C 11.693,3.765 9.997,2.078 9.997,0 9.997,-2.769 7.76,-5.007 4.999,-5.007 2.238,-5.007 0,-2.769 0,0 m 57.05,-23.153 c 0,-2.771 -2.237,-5.007 -4.998,-5.007 l -46.378,0 c -2.761,0 -4.999,2.236 -4.999,5.007 0,2.769 2.238,5.007 4.999,5.007 l 46.378,0 c 2.761,0 4.998,-2.238 4.998,-5.007 M 35.379,-2.805 c -1.545,2.291 -0.941,5.398 1.35,6.943 l 11.594,7.83 c 2.273,1.58 5.398,0.941 6.943,-1.332 1.545,-2.29 0.941,-5.398 -1.35,-6.943 l -11.594,-7.83 c -0.852,-0.586 -1.829,-0.87 -2.788,-0.87 -1.607,0 -3.187,0.781 -4.155,2.202 m 31.748,-30.786 c 0,-0.945 -0.376,-1.852 -1.045,-2.522 l -8.617,-8.617 c -0.669,-0.668 -1.576,-1.045 -2.523,-1.045 l -52.833,0 c -0.947,0 -1.854,0.377 -2.523,1.045 l -8.617,8.617 c -0.669,0.67 -1.045,1.577 -1.045,2.522 l 0,52.799 c 0,0.947 0.376,1.854 1.045,2.522 l 8.617,8.619 c 0.669,0.668 1.576,1.044 2.523,1.044 l 52.833,0 c 0.947,0 1.854,-0.376 2.523,-1.044 l 8.617,-8.619 c 0.669,-0.668 1.045,-1.575 1.045,-2.522 l 0,-52.799 z m 7.334,61.086 -11.25,11.25 c -1.705,1.705 -4.018,2.663 -6.428,2.663 l -56.523,0 c -2.412,0 -4.725,-0.959 -6.43,-2.665 L -17.412,27.494 c -1.704,-1.705 -2.661,-4.016 -2.661,-6.427 l 0,-56.515 c 0,-2.411 0.958,-4.725 2.663,-6.428 l 11.25,-11.25 c 1.705,-1.705 4.017,-2.662 6.428,-2.662 l 56.515,0 c 2.41,0 4.723,0.957 6.428,2.662 l 11.25,11.25 c 1.705,1.703 2.663,4.017 2.663,6.428 l 0,56.514 c 0,2.412 -0.958,4.724 -2.663,6.429" />
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+                <h2>Keyword Documentation</h2>
+                <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()"
+                    title="Toggle dark/light mode">&#9790;</button>
+            </div>
+            <button class="search-button" onclick="openSearch()">
+                <span class="search-button-text"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>Search</span>
+                <kbd class="search-kbd">Ctrl+K</kbd>
+            </button>
+        </div>
+        <div class="sidenav-nav">
+            <a class="sidenav-ext-link" href="http://robotframework.org/robotframework/" target="targetFrame">&#8599;
+                Robot Framework Docs</a>
+            <div class="sidenav-section-label">Libraries &amp; Resources</div>
+            {}
+        </div>
+        <div class="sidenav-footer">
+            Created: {}
+        </div>
     </div>
     <script>
         var coll = document.getElementsByClassName("collapsible");
         var i;
-        for (i = 0; i < coll.length; i++)
-        {
-            coll[i].addEventListener("click", function()
-            {
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function () {
                 this.classList.toggle("collapsible_expanded");
                 var content = this.nextElementSibling;
-                if (content.style.display === "block")
-                {
+                if (content.style.display === "block") {
                     content.style.display = "none";
                 }
-                else
-                {
+                else {
                     content.style.display = "block";
                 }
             });
         }
-        
+
+        var currentIframeSrc = document.querySelector('iframe[name="targetFrame"]').getAttribute('src');
+
         var leaf_links = document.getElementsByClassName("link_not_selected");
         var i;
-        for (i = 0; i < leaf_links.length; i++)
-        {
-            leaf_links[i].addEventListener("click", function()
-            {                
+        for (i = 0; i < leaf_links.length; i++) {
+            leaf_links[i].addEventListener("click", function () {
                 var active_leaf_links = document.getElementsByClassName("link_selected");
                 var j;
-                for (j=0; j < active_leaf_links.length; j++)
-                {
+                for (j = 0; j < active_leaf_links.length; j++) {
                     active_leaf_links[j].className = "link_not_selected";
-                }                
-                this.className = "link_selected";                             
+                }
+                this.className = "link_selected";
+                currentIframeSrc = this.getAttribute('href');
+                closeSidenav();
             });
         }
-        
-        function sidenav_open()
-        {
-            document.getElementById("main").style.marginLeft = "20%";
-            document.getElementById("sidenav").style.width = "20%";
-            document.getElementById("sidenav").style.display = "block";
-            document.getElementById("openNav").style.display = 'none';
+
+        function getTheme() {
+            return document.documentElement.getAttribute('data-theme') || 'light';
         }
-        function sidenav_close()
-        {
-            document.getElementById("main").style.marginLeft = "0%";
-            document.getElementById("sidenav").style.display = "none";
-            document.getElementById("openNav").style.display = "inline";
+        function toggleTheme() {
+            var current = getTheme();
+            var next = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('libtoc-theme', next);
+            document.documentElement.setAttribute('data-theme', next);
+            updateThemeIcon(next);
+            var iframe = document.querySelector('iframe[name="targetFrame"]');
+            if (iframe) iframe.src = currentIframeSrc;
+        }
+        function updateThemeIcon(theme) {
+            var btn = document.getElementById('themeToggle');
+            btn.innerHTML = theme === 'dark' ? '&#9788;' : '&#9790;';
+            btn.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+        }
+        updateThemeIcon(getTheme());
+
+        function openSidenav() {
+            document.getElementById('sidenav').classList.add('sidenav-open');
+            document.getElementById('sidenavBackdrop').classList.add('active');
+            document.getElementById('mobileMenuBtn').style.display = 'none';
+        }
+        function closeSidenav() {
+            document.getElementById('sidenav').classList.remove('sidenav-open');
+            document.getElementById('sidenavBackdrop').classList.remove('active');
+            document.getElementById('mobileMenuBtn').style.display = '';
         }
     </script>
-    </body>
+    <script>var searchIndex = SEARCH_INDEX_DATA;</script>
+    <div id="searchOverlay" class="search-overlay" onclick="handleOverlayClick(event)">
+        <div class="search-modal">
+            <div class="search-input-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input id="searchInput" type="text" placeholder="Search libraries, keywords, documentation..."
+                    autocomplete="off">
+                <kbd class="search-esc" onclick="closeSearch()">ESC</kbd>
+            </div>
+            <div id="searchResults" class="search-results">
+                <div class="search-empty">Type to search across all libraries and keywords</div>
+            </div>
+            <div class="search-footer">
+                <span><kbd>&uarr;</kbd><kbd>&darr;</kbd> Navigate</span>
+                <span><kbd>Enter</kbd> Open</span>
+                <span><kbd>Esc</kbd> Close</span>
+            </div>
+        </div>
+    </div>
+    <script>
+        var selectedResultIndex = -1;
+        function escapeHtml(text) {
+            var d = document.createElement("div");
+            d.textContent = text;
+            return d.innerHTML;
+        }
+        function openSearch() {
+            var overlay = document.getElementById("searchOverlay");
+            overlay.classList.add("active");
+            var input = document.getElementById("searchInput");
+            input.value = "";
+            input.focus();
+            selectedResultIndex = -1;
+            showDefaultMessage();
+        }
+        function closeSearch() {
+            document.getElementById("searchOverlay").classList.remove("active");
+            selectedResultIndex = -1;
+        }
+        function handleOverlayClick(e) {
+            if (e.target.id === "searchOverlay") {
+                closeSearch();
+            }
+        }
+        function showDefaultMessage() {
+            document.getElementById("searchResults").innerHTML = '<div class="search-empty">Type to search across all libraries and keywords</div>';
+        }
+        function highlightMatch(text, query) {
+            if (!query) return escapeHtml(text);
+            var escaped = escapeHtml(text);
+            var lower = escaped.toLowerCase();
+            var qLower = query.toLowerCase();
+            var idx = lower.indexOf(qLower);
+            if (idx === -1) return escaped;
+            return escaped.substring(0, idx) + "<mark>" + escaped.substring(idx, idx + query.length) + "</mark>" + escaped.substring(idx + query.length);
+        }
+        function performSearch(query) {
+            if (!query || query.length < 1) {
+                showDefaultMessage();
+                selectedResultIndex = -1;
+                return;
+            }
+            var q = query.toLowerCase();
+            var libraryResults = [];
+            var fileResults = [];
+            var keywordResults = [];
+            var docResults = [];
+            for (var i = 0; i < searchIndex.length; i++) {
+                var lib = searchIndex[i];
+                var nameMatch = lib.name.toLowerCase().indexOf(q) !== -1;
+                var fileNameMatch = lib.fileName && lib.fileName.toLowerCase().indexOf(q) !== -1;
+                var pathMatch = lib.path.toLowerCase().indexOf(q) !== -1;
+                if (nameMatch) {
+                    libraryResults.push(lib);
+                } else if (fileNameMatch || pathMatch) {
+                    fileResults.push(lib);
+                }
+                for (var j = 0; j < lib.keywords.length; j++) {
+                    var kw = lib.keywords[j];
+                    if (kw.name.toLowerCase().indexOf(q) !== -1) {
+                        keywordResults.push({ kw: kw, lib: lib });
+                    } else if (kw.shortdoc.toLowerCase().indexOf(q) !== -1) {
+                        docResults.push({ kw: kw, lib: lib });
+                    }
+                }
+            }
+            var html = "";
+            var resultCount = 0;
+            if (libraryResults.length > 0) {
+                html += '<div class="search-category">Libraries / Resources</div>';
+                for (var li = 0; li < libraryResults.length && li < 10; li++) {
+                    var libItem = libraryResults[li];
+                    html += '<div class="search-result" data-path="' + escapeHtml(libItem.path) + '" data-idx="' + resultCount + '" onclick="navigateToResult(this)">';
+                    html += '<div class="search-result-name">' + highlightMatch(libItem.name, query) + '<span class="search-result-type">' + escapeHtml(libItem.type) + '</span></div>';
+                    html += '<div class="search-result-meta">' + escapeHtml(libItem.path) + '</div>';
+                    html += '</div>';
+                    resultCount++;
+                }
+            }
+            if (fileResults.length > 0) {
+                html += '<div class="search-category">Files</div>';
+                for (var fi = 0; fi < fileResults.length && fi < 10; fi++) {
+                    var fileItem = fileResults[fi];
+                    html += '<div class="search-result" data-path="' + escapeHtml(fileItem.path) + '" data-idx="' + resultCount + '" onclick="navigateToResult(this)">';
+                    html += '<div class="search-result-name">' + highlightMatch(fileItem.fileName || fileItem.name, query) + '<span class="search-result-type">' + escapeHtml(fileItem.type) + '</span></div>';
+                    html += '<div class="search-result-meta">' + highlightMatch(fileItem.path, query) + '</div>';
+                    html += '</div>';
+                    resultCount++;
+                }
+            }
+            if (keywordResults.length > 0) {
+                html += '<div class="search-category">Keywords</div>';
+                for (var ki = 0; ki < keywordResults.length && ki < 20; ki++) {
+                    var kwItem = keywordResults[ki];
+                    var argsDisplay = kwItem.kw.args ? "  (" + escapeHtml(kwItem.kw.args) + ")" : "";
+                    html += '<div class="search-result" data-path="' + escapeHtml(kwItem.lib.path) + '" data-hash="' + encodeURIComponent(kwItem.kw.name) + '" data-idx="' + resultCount + '" onclick="navigateToResult(this)">';
+                    html += '<div class="search-result-name">' + highlightMatch(kwItem.kw.name, query) + '</div>';
+                    html += '<div class="search-result-meta">' + escapeHtml(kwItem.lib.name) + argsDisplay + '</div>';
+                    html += '</div>';
+                    resultCount++;
+                }
+            }
+            if (docResults.length > 0) {
+                html += '<div class="search-category">Documentation</div>';
+                for (var di = 0; di < docResults.length && di < 10; di++) {
+                    var docItem = docResults[di];
+                    html += '<div class="search-result" data-path="' + escapeHtml(docItem.lib.path) + '" data-hash="' + encodeURIComponent(docItem.kw.name) + '" data-idx="' + resultCount + '" onclick="navigateToResult(this)">';
+                    html += '<div class="search-result-name">' + escapeHtml(docItem.kw.name) + ' <span class="search-result-type">' + escapeHtml(docItem.lib.name) + '</span></div>';
+                    html += '<div class="search-result-meta">' + highlightMatch(docItem.kw.shortdoc, query) + '</div>';
+                    html += '</div>';
+                    resultCount++;
+                }
+            }
+            if (resultCount === 0) {
+                html = '<div class="search-empty">No results found for "' + escapeHtml(query) + '"</div>';
+            }
+            document.getElementById("searchResults").innerHTML = html;
+            selectedResultIndex = -1;
+        }
+        function navigateToResult(el) {
+            var path = el.getAttribute("data-path");
+            var hash = el.getAttribute("data-hash");
+            var iframe = document.querySelector('iframe[name="targetFrame"]');
+            var url = path;
+            if (hash) {
+                url += "#" + hash;
+            }
+            iframe.src = url;
+            currentIframeSrc = url;
+            var activeLinks = document.getElementsByClassName("link_selected");
+            for (var ai = activeLinks.length - 1; ai >= 0; ai--) {
+                activeLinks[ai].className = "link_not_selected";
+            }
+            var sideLinks = document.querySelectorAll(".sidenav a.link_not_selected, .sidenav a.link_selected");
+            for (var si = 0; si < sideLinks.length; si++) {
+                var href = sideLinks[si].getAttribute("href");
+                if (href) {
+                    var normalizedHref = href.replace(/\\/g, "/");
+                    if (normalizedHref === path) {
+                        sideLinks[si].className = "link_selected";
+                        break;
+                    }
+                }
+            }
+            closeSearch();
+        }
+        function updateSearchSelection(newIdx) {
+            var results = document.querySelectorAll("#searchResults .search-result");
+            if (newIdx < 0 || newIdx >= results.length) return;
+            for (var ui = 0; ui < results.length; ui++) {
+                results[ui].classList.remove("selected");
+            }
+            results[newIdx].classList.add("selected");
+            results[newIdx].scrollIntoView({ block: "nearest" });
+            selectedResultIndex = newIdx;
+        }
+        window.addEventListener("message", function (e) {
+            if (e.data === "libtoc-open-search") openSearch();
+        });
+        document.addEventListener("keydown", function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+                e.preventDefault();
+                openSearch();
+                return;
+            }
+            var overlay = document.getElementById("searchOverlay");
+            if (!overlay.classList.contains("active")) return;
+            if (e.key === "Escape") {
+                closeSearch();
+                e.preventDefault();
+                return;
+            }
+            var results = document.querySelectorAll("#searchResults .search-result");
+            if (results.length === 0) return;
+            if (e.key === "ArrowDown") {
+                e.preventDefault();
+                var ndi = selectedResultIndex + 1;
+                if (ndi >= results.length) ndi = 0;
+                updateSearchSelection(ndi);
+            } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                var nui = selectedResultIndex - 1;
+                if (nui < 0) nui = results.length - 1;
+                updateSearchSelection(nui);
+            } else if (e.key === "Enter") {
+                e.preventDefault();
+                if (selectedResultIndex >= 0 && selectedResultIndex < results.length) {
+                    navigateToResult(results[selectedResultIndex]);
+                }
+            }
+        });
+        document.getElementById("searchInput").addEventListener("input", function () {
+            performSearch(this.value);
+        });
+        document.getElementById("searchResults").addEventListener("mouseover", function (e) {
+            var el = e.target.closest(".search-result");
+            if (!el) return;
+            var idx = parseInt(el.getAttribute("data-idx"), 10);
+            if (!isNaN(idx) && idx !== selectedResultIndex) {
+                updateSearchSelection(idx);
+            }
+        });
+    </script>
+</body>
+
 </html>

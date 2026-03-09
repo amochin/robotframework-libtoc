@@ -1,17 +1,18 @@
 <html>
+    <head>
     <meta charset="utf-8">
-    <body style="font-family: 'Lato', sans-serif;">
-    <h1>
-    Docs for Robot Framework keywords
-    </h1>
-    <p>
-    Please select a library in the navigation sidebar
-    </p>
-    <p>
-    Created: 
-    <b>
-    {0}
-    </b>
-    </p>
+    <style>
+    :root { --bg: white; --text: #333; --text-muted: #666; --kbd-bg: #f3f3f3; --kbd-border: #e0e0e2; }
+    [data-theme=dark] { --bg: #1c2227; --text: #e2e1d7; --text-muted: #a8b2b8; --kbd-bg: #002b36; --kbd-border: #4e4e4e; color-scheme: dark; }
+    body { font-family: system-ui, -apple-system, sans-serif; color: var(--text); background: var(--bg); max-width: 640px; margin: 60px auto; padding: 0 24px; }
+    h1 { font-weight: 600; font-size: 24px; }
+    p { color: var(--text-muted); font-size: 15px; line-height: 1.6; }
+    kbd { background: var(--kbd-bg); border: 1px solid var(--kbd-border); border-radius: 4px; padding: 2px 7px; font-family: monospace; font-size: 12px; }
+    </style>
+    <script>!function(){var t=localStorage.getItem('libtoc-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);document.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();window.parent.postMessage('libtoc-open-search','*')}})}()</script>
+    </head>
+    <body>
+    <h1>Keyword Documentation</h1>
+    <p>Select a library or resource from the sidebar, or press <kbd>Ctrl+K</kbd> to search.</p>
     </body>
 </html>
