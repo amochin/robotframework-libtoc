@@ -175,6 +175,17 @@
             flex-shrink: 0;
         }
 
+        .sidenav-home-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            flex: 1;
+            min-width: 0;
+        }
+
         .sidenav-nav {
             flex: 1;
             overflow-y: auto;
@@ -528,6 +539,7 @@
 
     <div class="mobile-header">
         <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleSidenav()" aria-label="Toggle navigation">&#9776;</button>
+        <a class="sidenav-home-link" href="#" onclick="navigateToHomepage(); return false;" title="Go to homepage">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
             viewBox="0 0 202.4325 202.34125" height="24" width="24" style="flex-shrink:0;margin-top:3px">
             <g transform="matrix(1.25,0,0,-1.25,0,202.34125)">
@@ -542,6 +554,7 @@
             </g>
         </svg>
         <span class="mobile-header-title">Keyword Documentation</span>
+        </a>
     </div>
 
     <div id="main" class="main">
@@ -554,6 +567,7 @@
     <div id="sidenav" class="sidenav">
         <div class="sidenav-header">
             <div class="sidenav-title">
+                <a class="sidenav-home-link" href="#" onclick="navigateToHomepage(); return false;" title="Go to homepage">
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                     viewBox="0 0 202.4325 202.34125" height="28" width="28">
                     <g transform="matrix(1.25,0,0,-1.25,0,202.34125)">
@@ -568,6 +582,7 @@
                     </g>
                 </svg>
                 <h2>Keyword Documentation</h2>
+                </a>
                 <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()"
                     title="Toggle dark/light mode">&#9790;</button>
             </div>
@@ -607,7 +622,18 @@
             });
         }
 
-        var currentIframeSrc = document.querySelector('iframe[name="targetFrame"]').getAttribute('src');
+        var homepageUrl = document.querySelector('iframe[name="targetFrame"]').getAttribute('src');
+        var currentIframeSrc = homepageUrl;
+
+        function navigateToHomepage() {
+            var iframe = document.querySelector('iframe[name="targetFrame"]');
+            iframe.src = homepageUrl;
+            currentIframeSrc = homepageUrl;
+            var activeLinks = document.getElementsByClassName("link_selected");
+            for (var i = activeLinks.length - 1; i >= 0; i--) {
+                activeLinks[i].className = "link_not_selected";
+            }
+        }
 
         var leaf_links = document.getElementsByClassName("link_not_selected");
         var i;
