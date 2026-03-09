@@ -176,8 +176,8 @@ def inject_libtoc_script(src_dir):
     - Reads the theme from localStorage and applies data-theme on <html> so the
       page respects the libtoc theme choice even when file:// cross-origin prevents
       parent frame DOM access.
-    - Opens all external links (http/https/ftp/protocol-relative) in a new tab to
-      prevent navigation errors when the page is embedded in an iframe.
+    - Opens all external links (http/https/ftp/protocol-relative) in a new tab via
+      a click event listener, so dynamically-rendered links are handled correctly.
     - Forwards Ctrl+K / Cmd+K keypresses to the parent frame to open the libtoc search.
     """
     libtoc_script = (
@@ -185,13 +185,13 @@ def inject_libtoc_script(src_dir):
         '||(window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");'
         'document.documentElement.setAttribute("data-theme",t);'
         'document.addEventListener("DOMContentLoaded",function(){'
-        'document.documentElement.setAttribute("data-theme",t);'
-        'var links=document.getElementsByTagName("a");'
-        'for(var i=0;i<links.length;i++){'
-        'var h=links[i].getAttribute("href");'
+        'document.documentElement.setAttribute("data-theme",t)});'
+        'document.addEventListener("click",function(e){'
+        'var el=e.target.closest("a");'
+        'if(el){var h=el.getAttribute("href");'
         'if(h&&/^(https?:|ftp:\\/\\/|\\/\\/)/i.test(h)){'
-        'links[i].setAttribute("target","_blank");'
-        'links[i].setAttribute("rel","noopener noreferrer")}}});'
+        'e.preventDefault();'
+        'window.open(h,"_blank","noopener,noreferrer")}}});'
         'document.addEventListener("keydown",function(e){'
         'if((e.ctrlKey||e.metaKey)&&e.key==="k"){'
         'e.preventDefault();'
