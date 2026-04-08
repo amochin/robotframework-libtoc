@@ -29,7 +29,10 @@ def toc(links, timestamp, home_page_path, template_file="", search_index=None):
 
     result = html_template.replace("{}", home_page_path, 1)
     result = result.replace("{}", links, 1)
-    result = result.replace("{}", timestamp, 1)
+    if timestamp:
+        result = result.replace("{}", timestamp, 1)
+    else:
+        result = result.replace("Created: {}", "", 1)
 
     # inject search index data (done after format() to avoid brace escaping issues)
     if search_index is not None:
@@ -168,6 +171,28 @@ def build_search_index(src_dir, base_dir):
                         }
                     )
     return index
+
+
+def strip_libdoc_timestamps(src_dir):
+    """
+    Removes the 'generated' timestamp from the libdoc JSON data embedded in each
+    libdoc HTML file in src_dir, replacing it with an empty string.
+    """
+    for dirpath, dirnames, filenames in os.walk(src_dir):
+        dirnames.sort()
+        for file_name in sorted(filenames):
+            if file_name.endswith(".html") and file_name != "homepage.html":
+                file_path = os.path.join(dirpath, file_name)
+                with open(file_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+                new_content = re.sub(
+                    r'"generated":\s*"[^"]*"',
+                    '"generated": ""',
+                    content,
+                )
+                if new_content != content:
+                    with open(file_path, "w", encoding="utf-8") as f:
+                        f.write(new_content)
 
 
 def inject_libtoc_script(src_dir):
@@ -353,6 +378,7 @@ def create_toc(
     homepage_file="homepage.html",
     toc_template="",
     homepage_template="",
+    no_timestamp=False,
 ):
     """
     Generates a `toc_file` (Table of Contents) HTML page with links to all HTML files inside the `html_docs_dir` and all it's subfolders.
@@ -376,13 +402,17 @@ def create_toc(
 
     # create homepage in "src"
     homepage_path = os.path.join(src_subdir, homepage_file)
-    current_date_time = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
+    current_date_time = "" if no_timestamp else datetime.now().strftime("%d.%m.%Y %H:%M:%S")
     doc_files_links = add_files_from_folder(src_subdir, os.path.abspath(html_docs_dir))
     with open(homepage_path, "w", encoding="utf8") as f:
         f.write(homepage(homepage_template))
 
     # build search index from generated docs
     search_index = build_search_index(src_subdir, os.path.abspath(html_docs_dir))
+
+    # strip timestamps from libdoc HTML files if requested
+    if no_timestamp:
+        strip_libdoc_timestamps(src_subdir)
 
     # inject libtoc script into all libdoc HTML files
     inject_libtoc_script(src_subdir)
@@ -429,6 +459,12 @@ def main():
         "--homepage_template",
         default="",
         help="Custom HTML template for the homepage file",
+    )
+    parser.add_argument(
+        "--no_timestamp",
+        action="store_true",
+        default=False,
+        help="Do not include timestamps in the generated TOC and libdoc HTML files",
     )
     parser.add_argument(
         "-P",
@@ -513,6 +549,7 @@ def main():
             args.toc_file,
             toc_template=args.toc_template,
             homepage_template=args.homepage_template,
+            no_timestamp=args.no_timestamp,
         )
     else:
         print("No docs were created!")
