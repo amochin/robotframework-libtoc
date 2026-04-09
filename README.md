@@ -64,11 +64,12 @@ pip install robotframework-libtoc
 - Create the `.libtoc` config files in the *root of the resources folder* and/or in *direct subfolders* where you need docs to be created.    
 - Run `libtoc`. The last `resources_dirs` parameter is mandatory, it takes any number of paths. Other params are optional:
     - `-d, --output_dir`
+    - `-P, --pythonpath`
     - `--config_file`
     - `--toc_file`
     - `--toc_template`
     - `--homepage_template`
-    - `-P, --pythonpath`
+    - `--no_timestamp`
 
     Examples:
     ```shell
