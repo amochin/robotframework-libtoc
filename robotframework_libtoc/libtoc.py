@@ -124,16 +124,16 @@ def extract_libdoc_data(html_file_path):
     return None
 
 
-def build_search_index(src_dir, base_dir):
+def build_search_index(src_dir, base_dir, homepage_file):
     """
-    Builds a search index from all libdoc HTML files in src_dir.
+    Builds a search index from all libdoc HTML files in src_dir (except ``homepage_file``).
     Returns a list of library/resource entries with their keywords.
     """
     index = []
     for dirpath, dirnames, filenames in os.walk(src_dir):
         dirnames.sort()
         for file_name in sorted(filenames):
-            if file_name.endswith(".html") and file_name != "homepage.html":
+            if file_name.endswith(".html") and file_name != homepage_file:
                 file_path = os.path.join(dirpath, file_name)
                 data = extract_libdoc_data(file_path)
                 if data:
@@ -173,15 +173,15 @@ def build_search_index(src_dir, base_dir):
     return index
 
 
-def strip_libdoc_timestamps(src_dir):
+def strip_libdoc_timestamps(src_dir, homepage_file):
     """
     Removes the 'generated' timestamp from the libdoc JSON data embedded in each
-    libdoc HTML file in src_dir, replacing it with an empty string.
+    libdoc HTML file in src_dir (except ``homepage_file``), replacing it with an empty string.
     """
     for dirpath, dirnames, filenames in os.walk(src_dir):
         dirnames.sort()
         for file_name in sorted(filenames):
-            if file_name.endswith(".html") and file_name != "homepage.html":
+            if file_name.endswith(".html") and file_name != homepage_file:
                 file_path = os.path.join(dirpath, file_name)
                 with open(file_path, "r", encoding="utf-8") as f:
                     content = f.read()
@@ -195,9 +195,9 @@ def strip_libdoc_timestamps(src_dir):
                         f.write(new_content)
 
 
-def inject_libtoc_script(src_dir):
+def inject_libtoc_script(src_dir, homepage_file):
     """
-    Injects a small <script> into each libdoc HTML file in src_dir that:
+    Injects a small <script> into each libdoc HTML file in src_dir (except ``homepage_file``) that:
     - Reads the theme from localStorage and applies data-theme on <html> so the
       page respects the libtoc theme choice even when file:// cross-origin prevents
       parent frame DOM access.
@@ -226,7 +226,7 @@ def inject_libtoc_script(src_dir):
     for dirpath, dirnames, filenames in os.walk(src_dir):
         dirnames.sort()
         for file_name in sorted(filenames):
-            if file_name.endswith(".html") and file_name != "homepage.html":
+            if file_name.endswith(".html") and file_name != homepage_file:
                 file_path = os.path.join(dirpath, file_name)
                 with open(file_path, "r", encoding="utf-8") as f:
                     content = f.read()
@@ -408,14 +408,14 @@ def create_toc(
         f.write(homepage(homepage_template))
 
     # build search index from generated docs
-    search_index = build_search_index(src_subdir, os.path.abspath(html_docs_dir))
+    search_index = build_search_index(src_subdir, os.path.abspath(html_docs_dir), homepage_file)
 
     # strip timestamps from libdoc HTML files if requested
     if no_timestamp:
-        strip_libdoc_timestamps(src_subdir)
+        strip_libdoc_timestamps(src_subdir, homepage_file)
 
     # inject libtoc script into all libdoc HTML files
-    inject_libtoc_script(src_subdir)
+    inject_libtoc_script(src_subdir, homepage_file)
 
     # create TOC
     toc_file_path = os.path.join(html_docs_dir, toc_file)
