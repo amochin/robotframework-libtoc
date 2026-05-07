@@ -238,23 +238,27 @@ def inject_libtoc_script(src_dir, homepage_file):
                         f.write(content)
 
 
-def add_files_from_folder(folder, base_dir_path, root=True, folder_labels=None):
+def add_files_from_folder(folder, base_dir_path, root=True, folder_and_file_labels=None):
     """
     Creates a HTML source code with links to all HTML files in the `folder` and all it's subfolders.
     The links contain file paths relative to the `base_dir_path`.
 
     The `root` parameter is needed for internal usage only - it's set to False during deeper recursive calls.
     """
-    if folder_labels is None:
-        folder_labels = {}
+
+    def get_label_for_file_or_folder(item_name, labels):
+        if item_name in labels:
+            item_display_name = labels[item_name]
+            print(f">> Modified label of tree item: '{item_name}' -> '{item_display_name}'")
+        else:
+            item_display_name = item_name
+        return item_display_name
+
+    if folder_and_file_labels is None:
+        folder_and_file_labels = {}
     result_str = ""
     if not root:  # means we're in the root - no collapsible need in this case
-        folder_name = os.path.basename(folder)
-        if folder_name in folder_labels:
-            folder_display_name = folder_labels[folder_name]
-            print(f"> Modified label of tree item: '{folder_name}' -> '{folder_display_name}' (display only)")
-        else:
-            folder_display_name = folder_name
+        folder_display_name = get_label_for_file_or_folder(os.path.basename(folder), folder_and_file_labels)
         result_str += """<button class="collapsible">{}</button>
         """.format(
             folder_display_name
@@ -267,11 +271,7 @@ def add_files_from_folder(folder, base_dir_path, root=True, folder_labels=None):
         item_path = os.path.abspath(os.path.join(folder, item))
         if item.endswith(".html"):
             name_without_ext = os.path.splitext(item)[0]
-            if name_without_ext in folder_labels:
-                display_name = folder_labels[name_without_ext]
-                print(f"> Modified label of tree item: '{name_without_ext}' -> '{display_name}' (display only)")
-            else:
-                display_name = name_without_ext
+            display_name = get_label_for_file_or_folder(name_without_ext, folder_and_file_labels)
             result_str += """<a class="link_not_selected" href="{}" target="targetFrame">{}</a>
             """.format(
                 os.path.relpath(item_path, base_dir_path), display_name
@@ -279,7 +279,7 @@ def add_files_from_folder(folder, base_dir_path, root=True, folder_labels=None):
         else:
             if os.path.isdir(item_path):
                 result_str += add_files_from_folder(
-                    item_path, base_dir_path, root=False, folder_labels=folder_labels
+                    item_path, base_dir_path, root=False, folder_and_file_labels=folder_and_file_labels
                 )
 
     if not root:
@@ -417,7 +417,7 @@ def create_toc(
     # create homepage in "src"
     homepage_path = os.path.join(src_subdir, homepage_file)
     current_date_time = "" if no_timestamp else datetime.now().strftime("%d.%m.%Y %H:%M:%S")
-    doc_files_links = add_files_from_folder(src_subdir, os.path.abspath(html_docs_dir), folder_labels=folder_labels)
+    doc_files_links = add_files_from_folder(src_subdir, os.path.abspath(html_docs_dir), folder_and_file_labels=folder_labels)
     with open(homepage_path, "w", encoding="utf8") as f:
         f.write(homepage(homepage_template))
 
@@ -492,7 +492,7 @@ def main():
         action="append",
         metavar="KEY=VALUE",
         default=[],
-        help="Replace folder or file name KEY with VALUE in the TOC tree. Can be specified multiple times, e.g. --tree-label 'SUT X=My Project'",
+        help="Replace folder, file or lib name KEY with VALUE in the TOC tree. Can be specified multiple times, e.g. --tree-label 'SUT X=My Project'",
     )
 
     args = parser.parse_args()

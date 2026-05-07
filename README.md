@@ -20,7 +20,7 @@ in the intranet or uploaded as CI artifact - so everybody can easily access the 
 - It looks for the **config files** named `.libtoc` which contain items you would like to create docs for:
     1. Paths to resource/lib files in [glob format](https://en.wikipedia.org/wiki/Glob_(programming))
     2. RF libraries, installed or available in PYTHONPATH using the provided fully qualified name
-        > Librariy import params (if necessary) like described in [libdoc user guide](https://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#general-usage)
+        > Library import params (if necessary) like described in [libdoc user guide](https://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#general-usage)
         > Other libdoc CLI options (e.g. version or name of the output file) are not supported
     3. Paths to resource/lib files in [glob format](https://en.wikipedia.org/wiki/Glob_(programming)) inside Python packages, loaded from the PYTHONPATH
         > See more about bundling RF resources in Python packages in [RF User Guide](http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#taking-resource-files-into-use)
@@ -96,12 +96,12 @@ There are two ways to extend the list of paths where the libraries are searched 
 See more in [Robot Framework User Guide](http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#pythonpath).
 
 ## How to customize TOC tree item labels
-By default the TOC navigation tree uses the original folder and file names.
-Use `--tree-label KEY=VALUE` to replace any folder name or file name (without extension) with a custom display label — without affecting the actual file paths.
+By default the TOC navigation tree uses the original folder, file and library names.  
+Use `--tree-label KEY=VALUE` to replace any folder, library or file name (without extension) with a custom display label — without affecting the actual file paths.   
 
 The option can be repeated any number of times:
 ```shell
 libtoc --tree-label "sut_x=SUT X (Production)" --tree-label "common=Common Keywords" example_resources
 ```
-
-> Only the visible label in the tree is changed. Folder structure and file paths remain untouched.
+> - Only the visible label in the tree is changed. Folder structure and file paths remain untouched.   
+> - If the item name is found multiple times in the TOC, all occurrences would be replaced.
