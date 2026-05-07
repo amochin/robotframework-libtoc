@@ -70,6 +70,7 @@ pip install robotframework-libtoc
     - `--toc_template`
     - `--homepage_template`
     - `--no_timestamp`
+    - `--tree-label`
 
     Examples:
     ```shell
@@ -78,6 +79,7 @@ pip install robotframework-libtoc
     libtoc --output_dir docs example_resources
     libtoc --output_dir docs --toc_file MY_SPECIAL_NAME_FOR_DOCS.html example_resources
     libtoc --toc_template MY_CUSTOM_TOC.html --homepage_template MY_CUSTOM_HOMEPAGE.html example_resources
+    libtoc --tree-label "my_folder=My Display Name" --tree-label "my_lib=My Lib Label" example_resources
     ```
 
 - Open the created file, e.g. `docs/keyword_docs.html`
@@ -92,3 +94,14 @@ There are two ways to extend the list of paths where the libraries are searched 
 2. Set the **PYTHONPATH** environment variable
 
 See more in [Robot Framework User Guide](http://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#pythonpath).
+
+## How to customize TOC tree item labels
+By default the TOC navigation tree uses the original folder and file names.
+Use `--tree-label KEY=VALUE` to replace any folder name or file name (without extension) with a custom display label — without affecting the actual file paths.
+
+The option can be repeated any number of times:
+```shell
+libtoc --tree-label "sut_x=SUT X (Production)" --tree-label "common=Common Keywords" example_resources
+```
+
+> Only the visible label in the tree is changed. Folder structure and file paths remain untouched.

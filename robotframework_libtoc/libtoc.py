@@ -238,18 +238,26 @@ def inject_libtoc_script(src_dir, homepage_file):
                         f.write(content)
 
 
-def add_files_from_folder(folder, base_dir_path, root=True):
+def add_files_from_folder(folder, base_dir_path, root=True, folder_labels=None):
     """
     Creates a HTML source code with links to all HTML files in the `folder` and all it's subfolders.
     The links contain file paths relative to the `base_dir_path`.
 
     The `root` parameter is needed for internal usage only - it's set to False during deeper recursive calls.
     """
+    if folder_labels is None:
+        folder_labels = {}
     result_str = ""
     if not root:  # means we're in the root - no collapsible need in this case
+        folder_name = os.path.basename(folder)
+        if folder_name in folder_labels:
+            folder_display_name = folder_labels[folder_name]
+            print(f"> Modified label of tree item: '{folder_name}' -> '{folder_display_name}' (display only)")
+        else:
+            folder_display_name = folder_name
         result_str += """<button class="collapsible">{}</button>
         """.format(
-            os.path.basename(folder)
+            folder_display_name
         )
 
         result_str += """<div class="collapsible_content">
@@ -259,14 +267,19 @@ def add_files_from_folder(folder, base_dir_path, root=True):
         item_path = os.path.abspath(os.path.join(folder, item))
         if item.endswith(".html"):
             name_without_ext = os.path.splitext(item)[0]
+            if name_without_ext in folder_labels:
+                display_name = folder_labels[name_without_ext]
+                print(f"> Modified label of tree item: '{name_without_ext}' -> '{display_name}' (display only)")
+            else:
+                display_name = name_without_ext
             result_str += """<a class="link_not_selected" href="{}" target="targetFrame">{}</a>
             """.format(
-                os.path.relpath(item_path, base_dir_path), name_without_ext
+                os.path.relpath(item_path, base_dir_path), display_name
             )
         else:
             if os.path.isdir(item_path):
                 result_str += add_files_from_folder(
-                    item_path, base_dir_path, root=False
+                    item_path, base_dir_path, root=False, folder_labels=folder_labels
                 )
 
     if not root:
@@ -379,6 +392,7 @@ def create_toc(
     toc_template="",
     homepage_template="",
     no_timestamp=False,
+    folder_labels=None,
 ):
     """
     Generates a `toc_file` (Table of Contents) HTML page with links to all HTML files inside the `html_docs_dir` and all it's subfolders.
@@ -403,7 +417,7 @@ def create_toc(
     # create homepage in "src"
     homepage_path = os.path.join(src_subdir, homepage_file)
     current_date_time = "" if no_timestamp else datetime.now().strftime("%d.%m.%Y %H:%M:%S")
-    doc_files_links = add_files_from_folder(src_subdir, os.path.abspath(html_docs_dir))
+    doc_files_links = add_files_from_folder(src_subdir, os.path.abspath(html_docs_dir), folder_labels=folder_labels)
     with open(homepage_path, "w", encoding="utf8") as f:
         f.write(homepage(homepage_template))
 
@@ -472,11 +486,25 @@ def main():
         default="",
         help="Additional locations where to search for libraries and resources similarly as when running tests",
     )
+    parser.add_argument(
+        "--tree-label",
+        dest="folder_labels",
+        action="append",
+        metavar="KEY=VALUE",
+        default=[],
+        help="Replace folder or file name KEY with VALUE in the TOC tree. Can be specified multiple times, e.g. --tree-label 'SUT X=My Project'",
+    )
 
     args = parser.parse_args()
 
     if args.pythonpath:
         sys.path.insert(0, args.pythonpath)
+
+    folder_labels = {}
+    for kv in args.folder_labels:
+        if "=" in kv:
+            key, _, value = kv.partition("=")
+            folder_labels[key] = value
 
     if os.path.isdir(args.output_dir):
         print(f"Output dir already exists, deleting it: {args.output_dir}")
@@ -550,6 +578,7 @@ def main():
             toc_template=args.toc_template,
             homepage_template=args.homepage_template,
             no_timestamp=args.no_timestamp,
+            folder_labels=folder_labels,
         )
     else:
         print("No docs were created!")
